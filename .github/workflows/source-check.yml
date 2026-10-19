@@ -57,6 +57,11 @@ jobs:
             const r=await collect(c,{seeds:['https://www.offertoday.com/en/job/AyhVew6Kb5t_Sv19ONmqyA=='],limit:1,searchTerms:[]});
             const summary={jobs:r.jobs.map(j=>({...j,description:(j.description??'').slice(0,6000)})),audit:r.audit,errors:r.errors};
             console.log('::notice title=Real detail diagnostic::'+JSON.stringify(summary).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
+            const p=await c.newPage();const network=[];const pending=[];
+            p.on('response',response=>{const u=new URL(response.url());if(/job|recommend|detail|seo/i.test(u.pathname)&&['fetch','xhr'].includes(response.request().resourceType()))pending.push(response.json().then(d=>network.push({host:u.hostname,path:u.pathname,keys:Object.keys(d??{}),nested:Object.fromEntries(Object.entries(d??{}).filter(([,v])=>v&&typeof v==='object').map(([k,v])=>[k,Object.keys(v).slice(0,45)]))})).catch(()=>{}))});
+            await p.goto('https://www.offertoday.com/en/job/AyhVew6Kb5t_Sv19ONmqyA==',{waitUntil:'domcontentloaded',timeout:30000});await p.waitForTimeout(8000);await Promise.all(pending);
+            const dom={text:(await p.locator('body').innerText()).slice(0,9000),buttons:await p.getByRole('button').allTextContents(),network};
+            console.log('::notice title=Real detail DOM and response shape::'+JSON.stringify(dom).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
           }finally{await c.close();await b.close()}
           JS
       - name: Render published service terms in a normal browser
