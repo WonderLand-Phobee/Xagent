@@ -4,6 +4,7 @@ import {chromium} from '@playwright/test';
 import robotsParser from 'robots-parser';
 const AGENT='OfferTodayContentDesk';
 import {readFileSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
 import {pathToFileURL} from 'node:url';
 const origin='https://www.offertoday.com';
 export const keywords=['Software Engineer','Software Developer','UI UX Designer','Graphic Designer','Video Editor'];
@@ -81,16 +82,20 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
     const unique=[...new Map(records.map(r=>[String(r.jobId),r])).values()];
     const body=await page.locator('body').innerText();
     const closed=/this (?:job|position) (?:has expired|is closed|is no longer available)|job expired|applications? closed|職位已(?:關閉|過期|下架)|职位已(?:关闭|过期|下架)/i.test(body);
-    const action=page.getByRole('button',{name:/^(?:Apply(?: now)?|Chat(?: now)?|Start chat|Send application message|立即申請|立即溝通|立即申请|立即沟通)$/i}).first();
+    const action=page.locator('#jobDetailActionButton').getByText(/^(?:Apply(?: now)?|Chat(?: now)?|Start chat|Send application message|立即申請|立即溝通|立即申请|立即沟通)$/i,{exact:true}).first();
     await action.waitFor({state:'visible',timeout:3000}).catch(()=>{});
-    const hasEnabledAction=await action.isVisible().catch(()=>false)&&await action.isEnabled().catch(()=>false);
+    const hasEnabledAction=await action.isVisible().catch(()=>false)&&await action.evaluate(el=>!el.closest('[disabled],[aria-disabled="true"]')&&getComputedStyle(el).pointerEvents!=='none').catch(()=>false);
     if(unique.length!==1){jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});continue}
     const r=unique[0];
     audit.push({url,jobStatus:r.jobStatus,jobSource:r.jobSource,hasEnabledAction,closed,buttons:!hasEnabledAction?(await page.getByRole('button').allTextContents()).slice(0,12):[]});
     jobs.push({jobUrl:url,verifiedAt:new Date().toISOString(),sourceJobId:String(r.jobId),jobTitle:r.jobName,description:r.jobDesc,
       jobStatus:closed?'Expired':r.jobStatus===2&&r.jobSource!==1&&hasEnabledAction?'Active':'Unverified',
       activeEvidence:r.jobStatus===2&&r.jobSource!==1&&hasEnabledAction&&!closed?'Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.':null,
-      salaryRaw:r.salaryDesc??'',experience:r.workExperienceDesc??'',jobTypeRaw:r.jobTypeDesc??''});
+      salaryRaw:r.salaryDesc??'',experience:r.workExperienceDesc??'',jobTypeRaw:r.jobTypeDesc??'',workArrangementRaw:r.workingModels??''});
+    if(jobs.length%3===0&&process.env.OFFERTODAY_PYTHON){
+     const check=spawnSync(process.env.OFFERTODAY_PYTHON,['-m','pipeline.check_batch'],{input:JSON.stringify(jobs),encoding:'utf8',timeout:15000});
+     if(check.status===0){const score=JSON.parse(check.stdout);if(score.eligible===12&&score.copyReady===12)break}
+    }
    }catch(e){jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});errors.push(e.message);if(/challenge|budget/.test(e.message))break}
    finally{page.off('response',listener)}
   }

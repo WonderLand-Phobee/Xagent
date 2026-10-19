@@ -12,7 +12,8 @@ permissions:
   id-token: write
 concurrency:
   group: offertoday-daily
-  cancel-in-progress: false
+  # A newer code revision or explicit rerun supersedes an obsolete crawl.
+  cancel-in-progress: true
 jobs:
   generate:
     runs-on: ubuntu-latest

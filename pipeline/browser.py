@@ -2,6 +2,8 @@
 import json
 import re
 import subprocess
+import os
+import sys
 import tempfile
 from pathlib import Path
 from bs4 import BeautifulSoup
@@ -22,21 +24,33 @@ def parse_browser_job(raw, now):
     salary=pay if re.search(r'(?:/\s*|per\s+)(?:month|hour|day|year|week)\b|月薪|年薪|時薪|日薪',pay,re.I) else UNKNOWN
     arrangement=UNKNOWN
     mode=re.search(r'(?im)^\s*Work(?:ing)? (?:arrangement|mode|style)\s*:\s*([^\n.]+)', BeautifulSoup(raw.get('description') or '', 'html.parser').get_text('\n'))
+    verified_mode=raw.get('workArrangementRaw')
+    if isinstance(verified_mode,list):
+        verified_mode=', '.join(x if isinstance(x,str) else str(x.get('name','')) if isinstance(x,dict) else '' for x in verified_mode)
+    if isinstance(verified_mode,str) and re.search(r'\b(?:Remote|Hybrid|On.site|Freelance)\b',verified_mode,re.I):
+        arrangement=clean(verified_mode)
     if mode:
         arrangement=mode[1].strip()
     elif re.search(r'\bFreelance\b',raw.get('jobTypeRaw') or '',re.I):
         arrangement=clean(raw['jobTypeRaw'])
+    experience=clean(raw.get('experience')) or UNKNOWN
+    lines=soup.get_text('\n',strip=True)
+    section=re.search(r'(?im)^\s*(?:(?:job|key|essential|minimum)\s+)?(?:requirements|qualifications|what you bring)\s*:?\s*$',lines)
+    if section:
+        requirement=re.search(r'(?im)^\s*(?:[-•]\s*)?((?:(?:at least|minimum(?: of)?)\s+)?\d+\+?(?:\s*[-–]\s*\d+|\s+to\s+\d+)?\s*(?:years?|yrs?))\s*(?:of\s+)?(?:(?:relevant|working|professional|hands-on)\s+)*experience\b',lines[section.end():])
+        if requirement:
+            experience=requirement[1].strip()
     return dict(jobUrl=raw.get('jobUrl',''), sourceJobId=raw.get('sourceJobId'),jobTitle=raw.get('jobTitle','Unknown'),
                 description=description, jobStatus=raw.get('jobStatus','Unverified'), activeEvidence=raw.get('activeEvidence'),
                 verifiedAt=raw.get('verifiedAt') or now.isoformat(), salary=salary,
-                experience=clean(raw.get('experience')) or UNKNOWN,workArrangement=arrangement,highlights=highlights)
+                experience=experience,workArrangement=arrangement,highlights=highlights)
 
 
 def collect_live(root, seeds, now):
     with tempfile.TemporaryDirectory(prefix='offertoday-browser-') as folder:
         path=Path(folder)/'input.json'
         path.write_text(json.dumps({'seeds':seeds}))
-        result=subprocess.run(['node',str(root/'scripts/collect-live.mjs'),str(path)],cwd=root,capture_output=True,text=True,timeout=840)
+        result=subprocess.run(['node',str(root/'scripts/collect-live.mjs'),str(path)],cwd=root,capture_output=True,text=True,timeout=840,env={**os.environ,'OFFERTODAY_PYTHON':sys.executable})
         if result.returncode:
             # Chromium's normal TLS/launch errors are safe; do not emit cookie/header dumps.
             raise RuntimeError('Normal browser collection failed: '+result.stderr.strip()[:1200])

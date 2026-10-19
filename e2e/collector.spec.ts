@@ -10,7 +10,7 @@ test('normal browser observes only the detail page response; no API replay',asyn
    detailRequests++;return route.fulfill({json:{data:{jobId:'fixture',jobStatus:2,jobSource:0,jobName:'TEST Software Engineer',jobDesc:'Build accessible software for our customers with a modern engineering team.',salaryDesc:'Not specified',workExperienceDesc:'Not specified'}}});
   }
   if(u.pathname==='/en/recommend')return route.fulfill({contentType:'text/html',body:'<a href="/en/job/fixture">TEST ONLY</a>'});
-  if(u.pathname==='/en/job/fixture')return route.fulfill({contentType:'text/html',body:'<button>Apply now</button><script>fetch("/wapi/geek/recommend/jobDetail?id=fixture")</script>'});
+  if(u.pathname==='/en/job/fixture')return route.fulfill({contentType:'text/html',body:'<div id="jobDetailActionButton"><div tabindex="0">Send application message</div></div><script>fetch("/wapi/geek/recommend/jobDetail?id=fixture")</script>'});
   return route.fulfill({status:404});
  });
  const result=await collect(context,{searchTerms:[],delay:50});
