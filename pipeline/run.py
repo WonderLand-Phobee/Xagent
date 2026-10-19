@@ -74,10 +74,42 @@ def generate(root=ROOT, demo=False):
     print(f"{date}: {day['status']}; {len(day['posts'])}/12 eligible; {len(day['excludedCandidates'])} excluded")
     return day
 
+def safe_generate(root=ROOT, demo=False):
+    try:
+        return generate(root, demo)
+    except Exception as exc:
+        now = datetime.now(HK)
+        date = now.date().isoformat()
+        output = root/'public/demo' if demo else root/'data'
+        day = build_day([], date, now, {}, errors=[f'Generation failed: {type(exc).__name__}: {str(exc)[:500]}'])
+        day['demo'] = demo
+        save(output/'daily'/f'{date}.json', day)
+        dates = sorted((p.stem for p in (output/'daily').glob('*.json')), reverse=True)
+        save(output/'index.json', {'timezone':'Asia/Hong_Kong','dates':dates,'latestDate':date,'lastAttemptAt':now.isoformat()})
+        if not demo:
+            save(output/'audit'/date/f"{now.strftime('%H%M%S%f')}.json", {'runAt':now.isoformat(),'errors':day['errors'],'eligible':0})
+        print(f"{date}: blocked; 0/12 eligible; generation error recorded")
+        return day
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--demo', action='store_true')
     args = parser.parse_args()
-    result = generate(demo=args.demo)
+    result = safe_generate(demo=args.demo)
+    if os.getenv('GITHUB_ACTIONS') == 'true':
+        from collections import Counter
+        reasons = dict(Counter(c['reason'] for c in result.get('excludedCandidates', [])))
+        summary = f"{result['date']}: {result['status']}; {len(result['posts'])}/12 eligible; exclusions={reasons}"
+        def notice(title, value):
+            escaped = str(value).replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+            print(f'::notice title={title}::{escaped}')
+        notice('Collection result', summary)
+        if result.get('errors'):
+            notice('Collection diagnostics', json.dumps(result['errors'])[:4000])
+        paths = sorted((ROOT/'data/audit'/result['date']).glob('*.json'))
+        if paths and not args.demo:
+            audit = load(paths[-1], {})
+            observations = [r for r in audit.get('requests', []) if 'jobStatus' in r]
+            notice('Verification observations', json.dumps(observations[:4])[:4500])
     # Persist failure health first, then retain a failing Actions result.
     raise SystemExit(2 if result['status']=='blocked' else 0)

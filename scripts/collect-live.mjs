@@ -10,9 +10,15 @@ export const keywords=['Software Engineer','Software Developer','UI UX Designer'
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 function objects(value){if(!value||typeof value!=='object')return [];if(Array.isArray(value))return value.flatMap(objects);return [value,...Object.values(value).flatMap(objects)];}
 export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,delay=2500,inspect=false}={}){
- const page=await context.newPage();const errors=[],audit=[],jobs=[];const urls=new Set();
+ const page=await context.newPage();page.setDefaultTimeout(8000);const errors=[],audit=[],jobs=[];const urls=new Set();
  const deadline=Date.now()+12*60*1000;
  let robots;
+ await page.route('**/*',route=>{
+  const u=new URL(route.request().url());
+  if(route.request().isNavigationRequest()&&u.origin!==origin)return route.abort('blockedbyclient');
+  if(robots&&u.origin===origin&&u.pathname!=='/robots.txt'&&robots.isAllowed(u.href,AGENT)!==true)return route.abort('blockedbyclient');
+  return route.fallback();
+ });
  const challenge=async()=>{
   const text=await page.locator('body').innerText();
   return /verify (?:that )?you are human|complete the security check|access denied|unusual traffic|安全驗證|安全验证|訪問受限|访问受限/i.test(text);
@@ -52,9 +58,9 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
    const fields=await input.all();let search;
    for(const field of fields){const ph=(await field.getAttribute('placeholder'))??'';if(/search|job|職位|搜尋|搜索/i.test(ph)){search=field;break}}
    if(!search){errors.push('Could not identify the public search box; collected visible official links only.');break}
-   await search.fill(term);await search.press('Enter');await pause(delay);
+   try{await search.fill(term);await search.press('Enter');await pause(delay)}catch{errors.push('Public search became unavailable; using already discovered official links.');break}
    if(await challenge())throw new Error('Access challenge encountered; stopped without solving it');
-   for(let scroll=0;scroll<3;scroll++){await addLinks();await page.locator('a[href*="/job/"]').first().hover().catch(()=>{});await page.mouse.wheel(0,850);await pause(delay);if(urls.size>=limit)break}
+   for(let scroll=0;scroll<3;scroll++){await addLinks();if(await page.locator('a[href*="/job/"]:visible').count())await page.locator('a[href*="/job/"]:visible').first().hover({timeout:2500}).catch(()=>{});await page.mouse.wheel(0,850);await pause(delay);if(urls.size>=limit)break}
   }
   if(!urls.size)errors.push('No official job links in rendered page. Login/challenge/markup may require a permitted source update.');
   for(const url of [...urls].sort((a,b)=>Number(initialURLs.has(a))-Number(initialURLs.has(b))).slice(0,limit)){
@@ -69,12 +75,14 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
     }
    };
    page.on('response',listener);
+   const expected=page.waitForResponse(r=>{const u=new URL(r.url());return u.origin===origin&&u.pathname==='/wapi/geek/recommend/jobDetail'},{timeout:12000}).catch(()=>null);
    try{
-    await navigate(url);await Promise.all(pending);
+    await navigate(url);await expected;await Promise.all(pending);
     const unique=[...new Map(records.map(r=>[String(r.jobId),r])).values()];
     const body=await page.locator('body').innerText();
     const closed=/this (?:job|position) (?:has expired|is closed|is no longer available)|job expired|applications? closed|職位已(?:關閉|過期|下架)|职位已(?:关闭|过期|下架)/i.test(body);
     const action=page.getByRole('button',{name:/^(?:Apply(?: now)?|Chat(?: now)?|Start chat|Send application message|立即申請|立即溝通|立即申请|立即沟通)$/i}).first();
+    await action.waitFor({state:'visible',timeout:3000}).catch(()=>{});
     const hasEnabledAction=await action.isVisible().catch(()=>false)&&await action.isEnabled().catch(()=>false);
     if(unique.length!==1){jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});continue}
     const r=unique[0];

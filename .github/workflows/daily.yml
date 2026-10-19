@@ -50,7 +50,12 @@ jobs:
           git add data
           if ! git diff --cached --quiet; then
             git commit -m 'data: refresh verified Hong Kong daily edition'
-            git push origin HEAD:main
+            for attempt in 1 2 3; do
+              git fetch origin main:refs/remotes/origin/main
+              git rebase refs/remotes/origin/main
+              if git push origin HEAD:main; then break; fi
+              if [ "$attempt" = 3 ]; then exit 1; fi
+            done
           fi
       - uses: actions/upload-artifact@v4
         if: always()
@@ -78,12 +83,18 @@ jobs:
           GENERATION: ${{ needs.generate.outputs.generation }}
           GENERATE_JOB: ${{ needs.generate.result }}
           DEPLOY_JOB: ${{ needs.deploy.result }}
+          PUBLISHED: ${{ needs.deploy.outputs.published }}
         run: |
-          test "$GENERATION" = 'success' && test "$GENERATE_JOB" = 'success' && test "$DEPLOY_JOB" = 'success'
+          if [ "$GENERATION" != 'success' ] || [ "$GENERATE_JOB" != 'success' ] || [ "$DEPLOY_JOB" != 'success' ]; then
+            exit 1
+          fi
+          if [ "$PUBLISHED" != 'true' ]; then
+            echo '::notice::Collection completed, but Pages is not configured. No website publication is claimed.'
+          fi
 
   remind:
     needs: [generate, deploy]
-    if: ${{ always() && vars.REMINDER_CHANNEL != '' }}
+    if: ${{ always() && vars.ENABLE_REMINDERS == 'true' && vars.REMINDER_CHANNEL != '' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -106,5 +117,5 @@ jobs:
           REMINDER_TO: ${{ secrets.REMINDER_TO }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          DEPLOYMENT_OK: ${{ needs.deploy.result == 'success' }}
+          DEPLOYMENT_OK: ${{ needs.deploy.outputs.published == 'true' }}
         run: python -m pipeline.notify

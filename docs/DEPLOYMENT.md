@@ -35,7 +35,7 @@ GitHub 标准浏览器已成功读到真实列表和详情链接。每日工作�
 
 提醒在本次更新/部署完成后发送，带固定网址和实际运行状态。GitHub cron 可能延迟，因此免费方案不能保证 10:00 整点送达；不是聊天后台任务。未配置时不会发送。
 
-先在 GitHub **Actions Variables** 新增 `DASHBOARD_URL`，值填步骤 2 实际部署成功的网址。以下任一方案只需设置一次。
+仅在以后决定启用提醒时，先在 GitHub **Actions Variables** 设置 `ENABLE_REMINDERS=true`，并新增 `DASHBOARD_URL`，值填步骤 2 实际部署成功的网址。以下任一方案只需设置一次。
 
 ### 邮件（Resend）
 

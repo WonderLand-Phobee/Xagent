@@ -21,3 +21,12 @@ test('browser stops at access challenge without scraping jobs',async({context})=
  const result=await collect(context,{searchTerms:[],delay:1});
  expect(result.jobs).toHaveLength(0);expect(result.errors.join(' ')).toContain('challenge');
 });
+test('current robots disallow stops page collection before navigation',async({context})=>{
+ let navigated=false;
+ await context.route('https://www.offertoday.com/**',r=>{
+  if(r.request().url().endsWith('/robots.txt'))return r.fulfill({contentType:'text/plain',body:'User-agent: *\nDisallow: /en/*'});
+  navigated=true;return r.fulfill({contentType:'text/html',body:'should not be requested'});
+ });
+ const result=await collect(context,{searchTerms:[],delay:1});
+ expect(result.jobs).toHaveLength(0);expect(navigated).toBe(false);expect(result.errors.join(' ')).toContain('Disallowed');
+});
