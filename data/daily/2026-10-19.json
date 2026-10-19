@@ -2,7 +2,7 @@
   "date": "2026-10-19",
   "timezone": "Asia/Hong_Kong",
   "targetCount": 12,
-  "lastRunAt": "2026-10-19T20:52:45.686579+08:00",
+  "lastRunAt": "2026-10-19T21:14:53.726739+08:00",
   "lastSuccessfulRunAt": "2026-10-19T20:35:35.586290+08:00",
   "status": "partial",
   "shortfall": 8,
@@ -12,10 +12,11 @@
       "sourceJobId": "MDkNhAV1vFW-I0p5FGddlQ==",
       "jobTitle": "software engineer",
       "description": "Key Responsibilities 1. Design and develop stable, efficient software features with clean, maintainable code, continuously learning new technical tools to upgrade development capabilities. 2. Collaborate with cross-functional teams to clarify business requirements and deliver practical, functional software solutions. 3. Conduct automated testing, troubleshoot and resolve software bugs and technical issues to ensure system stability and reliable performance. 4. Take part in code reviews, technical discussions and development planning to standardize development processes and guarantee code quality. Requirements & Qualifications 1. Bachelor’s degree in Computer Science, Software Engineering, IT or related fields, or equivalent practical technical training. 2. Hands-on coding experience with at least one mainstream language such as Python, C++, C# or Go. 3. Basic familiarity with Git / GitHub for version control. 4. Possess strong problem-solving skills, clear communication and a proactive learning attitude.",
+      "blockReason": null,
       "qualityIssue": null,
       "jobStatus": "Active",
       "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
-      "verifiedAt": "2026-10-19T12:52:11.498Z",
+      "verifiedAt": "2026-10-19T13:14:06.769Z",
       "salary": "HK $25K-30K/Month",
       "experience": "Not specified",
       "workArrangement": "On-site",
@@ -39,10 +40,11 @@
       "sourceJobId": "TNF-92hKrosSm7VUagLc_A==",
       "jobTitle": "Software Engineer",
       "description": "Job Responsibilities: Participate in system and software requirements, hardware design document, and code reviews. Responsible for software module design and organizing relevant personnel for review. Responsible for developing software functions according to design specificationsto meet product requirements. Responsible for fixing software-related bugs and the continuous improvement of products. Cooperate with engineers (electronic, mechanical, testing) within the team. Qualifications: Full-time bachelor's degree or above in Computer Science, Automation, or related fields. Over 3 years of embedded development experience; experience in sensor device development is preferred. Proficient in C/C++ programming languages, able to write driver code and business code from scratch. Proficient in using at least one type of MCU, with in-depth understanding and practical experience using peripherals (ADC/DAC/GPIO/UART/SPI/I2C). Possess troubleshooting skills for device debugging, MQTT protocol, BT/WiFi communication, etc.; familiar with related technologies such as remote OTA upgrades and host computer development. Good learning ability and logical thinking skills, positive work attitude, spirit of diligent study, and strong sense of teamwork. Good cross-department communication skills and team spirit, able to work closely with electronic and software engineers.",
+      "blockReason": null,
       "qualityIssue": null,
       "jobStatus": "Active",
       "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
-      "verifiedAt": "2026-10-19T12:52:20.384Z",
+      "verifiedAt": "2026-10-19T13:14:14.278Z",
       "salary": "HK $30K-50K/Month",
       "experience": "Not specified",
       "workArrangement": "Not specified",
@@ -66,10 +68,11 @@
       "sourceJobId": "dC60vj06cXMGkASikwy8cQ==",
       "jobTitle": "software engineer",
       "description": "About the Position Technology is at the core of how we approach our work, and engineers are intimately involved in every area of the business. We also believe in the value of open source software, using it in our daily work and releasing over a million lines of our own code as open source. About You Top-notch programming skills We don’t expect you to have experience with functional programming, OCaml, Python, or finance; we’re happy to hire talented engineers and teach them what they need to know. Fluent in English",
+      "blockReason": null,
       "qualityIssue": null,
       "jobStatus": "Active",
       "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
-      "verifiedAt": "2026-10-19T12:52:28.510Z",
+      "verifiedAt": "2026-10-19T13:14:21.570Z",
       "salary": "HK $90K-150K/Month",
       "experience": "Not specified",
       "workArrangement": "Not specified",
@@ -93,10 +96,11 @@
       "sourceJobId": "45n-nE5uuZYSxNHvyN-K_w==",
       "jobTitle": "Software Engineer",
       "description": "Key Responsibilities Design and develop stable, efficient software features with clean, maintainable code, and continuously learn new technical tools to improve development capabilities. Collaborate with cross-functional teams to clarify business requirements and deliver practical, functional software solutions. Conduct automated testing, troubleshoot and resolve software bugs and technical issues to ensure system stability and reliable performance. Participate in code reviews, technical discussions and development planning to standardize development processes and guarantee code quality. Requirements & Qualifications Bachelor’s or master degree in Computer Science, Software Engineering, IT or related fields, or equivalent practical technical training. Solid knowledge of C++ with hands-on project coding and development experience. Basic familiarity with Git / GitHub for version control. Strong problem-solving skills, clear communication and a proactive learning attitude.",
+      "blockReason": null,
       "qualityIssue": null,
       "jobStatus": "Active",
       "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
-      "verifiedAt": "2026-10-19T12:52:37.104Z",
+      "verifiedAt": "2026-10-19T13:14:30.287Z",
       "salary": "HK $25K-45K/Month",
       "experience": "Not specified",
       "workArrangement": "On-site",
@@ -118,14 +122,29 @@
   ],
   "excludedCandidates": [
     {
-      "jobId": "Abe810KLBlejylSufWtHAg==",
-      "jobUrl": "https://www.offertoday.com/en/job/Abe810KLBlejylSufWtHAg==",
-      "jobTitle": "Unknown",
-      "reason": "Unverified"
+      "jobId": "gTKY_tmBNiUArtLSUp4bIg==",
+      "jobUrl": "https://www.offertoday.com/en/job/gTKY_tmBNiUArtLSUp4bIg==",
+      "jobTitle": "Software Engineer",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    },
+    {
+      "jobId": "2Jae0wF8UXKDG5DLTufVtQ==",
+      "jobUrl": "https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "jobTitle": "Software Developer",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    },
+    {
+      "jobId": "lPAALQZ4dlleA2cAYYd-WA==",
+      "jobUrl": "https://www.offertoday.com/en/job/lPAALQZ4dlleA2cAYYd-WA==",
+      "jobTitle": "UI/ UX Designer",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
     }
   ],
   "errors": [
-    "Full JD requires sign-in; collection stopped; restricted content was not exported."
+    "Several consecutive full JDs require sign-in; stopped without exporting restricted descriptions."
   ],
   "demo": false
 }
