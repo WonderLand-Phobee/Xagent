@@ -1,0 +1,54 @@
+name: Inspect official public pages
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/collect-live.mjs', '.github/workflows/source-check.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Read published terms and robots without disabling HTTPS checks
+        id: policy
+        run: |
+          python3 - <<'PY'
+          import urllib.request, re, html, time, json
+          urls=['https://www.offertoday.com/robots.txt','https://m.offertoday.com/wap/policy/2?lang=en']
+          for url in urls:
+              try:
+                  with urllib.request.urlopen(url,timeout=25) as r: body=r.read(200000).decode('utf-8')
+                  text=html.unescape(re.sub('<[^>]+>', ' ', body))
+                  text=re.sub(r'\s+', ' ', text)
+                  # Public policy content only; no cookies, headers or credentials.
+                  for n in range(0,min(len(text),24000),6000):
+                      value=(url+' '+text[n:n+6000]).replace('%','%25').replace('\r','%0D').replace('\n','%0A')
+                      print('::notice title=Official source policy::'+value)
+              except Exception as e:
+                  print('::warning title=Policy read failed::'+url+' '+type(e).__name__)
+              time.sleep(2)
+          PY
+      - name: Normal rendered public page diagnostic
+        run: |
+          node scripts/collect-live.mjs --inspect > source-inspection.json
+          node --input-type=module <<'JS'
+          import {readFileSync} from 'node:fs';
+          const r=JSON.parse(readFileSync('source-inspection.json','utf8'));
+          for(const [name,text] of [['Rendered source',r.inspection??''],['Source errors',JSON.stringify(r.errors)],['Official job links',JSON.stringify(r.links??[])]]){
+            console.log(`::notice title=${name}::${text.slice(0,12000).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A')}`);
+          }
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: official-source-inspection
+          path: source-inspection.json
