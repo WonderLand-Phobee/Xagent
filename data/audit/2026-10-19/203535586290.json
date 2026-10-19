@@ -1,0 +1,192 @@
+{
+  "runAt": "2026-10-19T20:35:35.586290+08:00",
+  "requests": [
+    {
+      "url": "https://www.offertoday.com/en/recommend",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/gTKY_tmBNiUArtLSUp4bIg==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/gTKY_tmBNiUArtLSUp4bIg==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/MDkNhAV1vFW-I0p5FGddlQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/MDkNhAV1vFW-I0p5FGddlQ==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/TNF-92hKrosSm7VUagLc_A==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/TNF-92hKrosSm7VUagLc_A==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/dC60vj06cXMGkASikwy8cQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/dC60vj06cXMGkASikwy8cQ==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/yLodDOMDE6zJJicf8lZ6xw==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/yLodDOMDE6zJJicf8lZ6xw==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/0k5dX-AncRw3XHOhrS0C4Q==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/0k5dX-AncRw3XHOhrS0C4Q==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/45n-nE5uuZYSxNHvyN-K_w==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/45n-nE5uuZYSxNHvyN-K_w==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/Abe810KLBlejylSufWtHAg==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/Abe810KLBlejylSufWtHAg==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/g7-hFAg9ur3SGlOIZ4z6tw==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/g7-hFAg9ur3SGlOIZ4z6tw==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/yQ3eiUFAvMCzykY4GYPgzA==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/yQ3eiUFAvMCzykY4GYPgzA==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/GwHSKLD5p5FKpRiamgU_YA==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/GwHSKLD5p5FKpRiamgU_YA==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/gpu1qrb7smrkYHiPPjVs8A==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/gpu1qrb7smrkYHiPPjVs8A==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/q72FJ3mFiok5FDkvvt8k_w==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/q72FJ3mFiok5FDkvvt8k_w==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/xQS41I2yr_XMhHQcY6M9_Q==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/xQS41I2yr_XMhHQcY6M9_Q==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    }
+  ],
+  "errors": [],
+  "eligible": 12,
+  "excluded": 1
+}
