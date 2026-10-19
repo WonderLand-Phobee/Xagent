@@ -1,0 +1,9 @@
+{
+  "runAt": "2026-10-19T20:00:38.573934+08:00",
+  "requests": [],
+  "errors": [
+    "Source approval required: review official terms and robots, then enable OFFERTODAY_SOURCE_APPROVED. No live jobs have been verified."
+  ],
+  "eligible": 0,
+  "excluded": 0
+}

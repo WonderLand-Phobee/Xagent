@@ -1,0 +1,99 @@
+name: Daily verified edition
+on:
+  schedule:
+    - cron: '0 2 * * *' # 10:00 Asia/Hong_Kong. GitHub scheduling can be delayed.
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency:
+  group: offertoday-daily
+  cancel-in-progress: false
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      generation: ${{ steps.generate.outcome }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Generate and reverify today's edition
+        id: generate
+        continue-on-error: true
+        env:
+          OFFERTODAY_SOURCE_APPROVED: ${{ vars.OFFERTODAY_SOURCE_APPROVED }}
+        run: python -m pipeline.run
+      - name: Save snapshots including source failure health
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data
+          if ! git diff --cached --quiet; then
+            git commit -m 'data: refresh verified Hong Kong daily edition'
+            git push origin HEAD:main
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: edition-snapshot
+          path: data/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: daily-audit
+          path: data/audit/
+  # Same workflow deploy: pushes from GITHUB_TOKEN do not trigger other workflows.
+  deploy:
+    needs: generate
+    if: always() && needs.generate.result == 'success'
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
+  health:
+    needs: [generate, deploy]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report blocked generation or deployment
+        env:
+          GENERATION: ${{ needs.generate.outputs.generation }}
+          GENERATE_JOB: ${{ needs.generate.result }}
+          DEPLOY_JOB: ${{ needs.deploy.result }}
+        run: |
+          test "$GENERATION" = 'success' && test "$GENERATE_JOB" = 'success' && test "$DEPLOY_JOB" = 'success'
+
+  remind:
+    needs: [generate, deploy]
+    if: ${{ always() && vars.REMINDER_CHANNEL != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          name: edition-snapshot
+          path: data
+      - name: Send page reminder (never publishes to X)
+        env:
+          REMINDER_CHANNEL: ${{ vars.REMINDER_CHANNEL }}
+          DASHBOARD_URL: ${{ vars.DASHBOARD_URL }}
+          REMINDER_FROM: ${{ vars.REMINDER_FROM }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          REMINDER_TO: ${{ secrets.REMINDER_TO }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DEPLOYMENT_OK: ${{ needs.deploy.result == 'success' }}
+        run: python -m pipeline.notify

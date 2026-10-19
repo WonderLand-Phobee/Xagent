@@ -1,0 +1,15 @@
+{
+  "date": "2026-10-19",
+  "timezone": "Asia/Hong_Kong",
+  "targetCount": 12,
+  "lastRunAt": "2026-10-19T20:00:38.573934+08:00",
+  "lastSuccessfulRunAt": null,
+  "status": "blocked",
+  "shortfall": 12,
+  "posts": [],
+  "excludedCandidates": [],
+  "errors": [
+    "Source approval required: review official terms and robots, then enable OFFERTODAY_SOURCE_APPROVED. No live jobs have been verified."
+  ],
+  "demo": false
+}
