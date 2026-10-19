@@ -5,6 +5,10 @@ on:
     paths-ignore: ['data/**']
   workflow_dispatch:
   workflow_call:
+    outputs:
+      published:
+        description: Whether this run actually published a Pages site
+        value: ${{ jobs.deploy.outputs.published }}
 permissions:
   contents: read
   pages: write
@@ -13,8 +17,35 @@ concurrency:
   group: github-pages
   cancel-in-progress: false
 jobs:
-  deploy:
+  check-pages:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      enabled: ${{ steps.inspect.outputs.enabled }}
+    steps:
+      - name: Check Pages configuration before attempting deployment
+        id: inspect
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const { data } = await github.rest.repos.getPages(context.repo);
+              const enabled = data.build_type === 'workflow';
+              core.setOutput('enabled', String(enabled));
+              if (!enabled) core.notice('Pages is not configured for GitHub Actions. Choose Settings > Pages > Source > GitHub Actions. Deployment skipped.');
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              core.setOutput('enabled', 'false');
+              core.notice('Pages is not enabled. Choose Settings > Pages > Source > GitHub Actions, then run Deploy dashboard. Deployment skipped; no site was published.');
+            }
+  deploy:
+    needs: check-pages
+    if: needs.check-pages.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.deployment.outcome == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
