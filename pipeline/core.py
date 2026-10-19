@@ -19,8 +19,11 @@ def job_id(url):
         p = urlparse(url)
         if p.scheme != 'https' or p.hostname not in HOSTS or p.username or p.password or p.port:
             return None
-        m = re.fullmatch(r'/(?:en/)?job/([A-Za-z0-9_-]+)/*', p.path)
-        return unquote(m[1]) if m else None
+        m = re.fullmatch(r'/(?:en/)?job/([A-Za-z0-9_%+=-]+)/*', p.path)
+        if not m:
+            return None
+        value = unquote(m[1])
+        return value if re.fullmatch(r'[A-Za-z0-9_+=-]{1,512}', value) else None
     except (ValueError, TypeError):
         return None
 
@@ -102,7 +105,8 @@ def build_day(jobs, date, now, history, previous=None, errors=None):
     for raw in jobs:
         j = dict(raw)
         reason = validate(j, now)
-        jid = job_id(j.get('jobUrl', ''))
+        source_id = str(j.get('sourceJobId') or '')
+        jid = source_id if re.fullmatch(r'[A-Za-z0-9_+=-]{1,512}', source_id) else job_id(j.get('jobUrl', ''))
         if not reason and jid in seen:
             reason = 'Duplicate same day'
         if reason:

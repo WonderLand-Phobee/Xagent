@@ -5,6 +5,7 @@ test('normal browser observes only the detail page response; no API replay',asyn
  let detailRequests=0;
  await context.route('https://www.offertoday.com/**',async route=>{
   const u=new URL(route.request().url());
+  if(u.pathname==='/robots.txt')return route.fulfill({contentType:'text/plain',body:'User-agent: *\nAllow: /'});
   if(u.pathname==='/wapi/geek/recommend/jobDetail'){
    detailRequests++;return route.fulfill({json:{data:{jobId:'fixture',jobStatus:2,jobName:'TEST Software Engineer',jobDesc:'Build accessible software for our customers with a modern engineering team.',salaryDesc:'Not specified',workExperienceDesc:'Not specified'}}});
   }
@@ -16,7 +17,7 @@ test('normal browser observes only the detail page response; no API replay',asyn
  expect(result.jobs).toHaveLength(1);expect(result.jobs[0].jobStatus).toBe('Active');expect(result.jobs[0].sourceJobId).toBe('fixture');expect(detailRequests).toBe(1);
 });
 test('browser stops at access challenge without scraping jobs',async({context})=>{
- await context.route('https://www.offertoday.com/**',r=>r.fulfill({contentType:'text/html',body:'Verify you are human'}));
+ await context.route('https://www.offertoday.com/**',r=>r.fulfill(r.request().url().endsWith('/robots.txt')?{contentType:'text/plain',body:'User-agent: *\nAllow: /'}:{contentType:'text/html',body:'Verify you are human'}));
  const result=await collect(context,{searchTerms:[],delay:1});
  expect(result.jobs).toHaveLength(0);expect(result.errors.join(' ')).toContain('challenge');
 });

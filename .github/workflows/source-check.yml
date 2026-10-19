@@ -43,9 +43,25 @@ jobs:
           node --input-type=module <<'JS'
           import {readFileSync} from 'node:fs';
           const r=JSON.parse(readFileSync('source-inspection.json','utf8'));
-          for(const [name,text] of [['Rendered source',r.inspection??''],['Source errors',JSON.stringify(r.errors)],['Official job links',JSON.stringify(r.links??[])]]){
+          for(const [name,text] of [['Rendered source',r.inspection??''],['Source errors',JSON.stringify(r.errors)],['Search inputs',JSON.stringify(r.inputs??[])],['Official job links',JSON.stringify(r.links??[])]]){
             console.log(`::notice title=${name}::${text.slice(0,12000).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A')}`);
           }
+          JS
+      - name: Render published service terms in a normal browser
+        run: |
+          node --input-type=module <<'JS'
+          import {chromium} from '@playwright/test';
+          const b=await chromium.launch();const p=await b.newPage({locale:'en-HK'});
+          try {
+            const response=await p.goto('https://m.offertoday.com/wap/policy/2?lang=en',{waitUntil:'domcontentloaded',timeout:30000});
+            await p.waitForTimeout(4000);
+            const text=await p.locator('body').innerText();
+            console.log(`::notice title=Service terms status::${response?.status()} chars=${text.length}`);
+            for(let i=0;i<Math.min(text.length,100000);i+=9000){
+              console.log(`::notice title=Service terms ${i/9000+1}::${text.slice(i,i+9000).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A')}`);
+            }
+          }catch(e){console.log('::warning title=Terms browser failure::'+e.message.replaceAll('\n',' '));}
+          finally{await b.close()}
           JS
       - uses: actions/upload-artifact@v4
         if: always()

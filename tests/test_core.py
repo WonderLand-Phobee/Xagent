@@ -92,3 +92,13 @@ def test_job_id_stable():
 def test_long_draft_never_removes_an_eligible_job():
     d=day([sample(jobTitle='Software Engineer '+'Specialist '*60)])
     assert len(d['posts'])==1 and d['posts'][0]['xCopy']==''
+
+
+def test_observed_official_padded_ids_and_encoded_variants():
+    assert job_id('https://www.offertoday.com/en/job/92ui3FMOje6VZNnag0b44g==')=='92ui3FMOje6VZNnag0b44g=='
+    assert job_id('https://www.offertoday.com/en/job/92ui3FMOje6VZNnag0b44g%3D%3D')=='92ui3FMOje6VZNnag0b44g=='
+    assert job_id('https://www.offertoday.com/en/job/bad%2Fid') is None
+
+def test_authoritative_id_deduplicates_different_detail_paths():
+    d=day([sample(sourceJobId='official-123',jobUrl=f'https://www.offertoday.com/en/job/{i}') for i in range(2)])
+    assert len(d['posts'])==1 and d['posts'][0]['jobId']=='official-123'
