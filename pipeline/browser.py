@@ -47,7 +47,7 @@ def parse_browser_job(raw, now):
         if requirement:
             experience=requirement[1].strip()
     return dict(jobUrl=raw.get('jobUrl',''), sourceJobId=raw.get('sourceJobId'),jobTitle=raw.get('jobTitle','Unknown'),
-                description=description, qualityIssue='Conflicting salary' if conflicting_salary(pay,description) else None, jobStatus=raw.get('jobStatus','Unverified'), activeEvidence=raw.get('activeEvidence'),
+                description=description, blockReason=raw.get('blockReason'), qualityIssue='Conflicting salary' if conflicting_salary(pay,description) else None, jobStatus=raw.get('jobStatus','Unverified'), activeEvidence=raw.get('activeEvidence'),
                 verifiedAt=raw.get('verifiedAt') or now.isoformat(), salary=salary,
                 experience=experience,workArrangement=arrangement,highlights=highlights)
 

@@ -51,7 +51,7 @@ jobs:
         run: |
           node --input-type=module <<'JS'
           import {chromium} from '@playwright/test';
-          import {collect} from './scripts/collect-live.mjs';
+          import {collect,jdAccess} from './scripts/collect-live.mjs';
           const b=await chromium.launch();const c=await b.newContext({locale:'en-HK',userAgent:'OfferTodayContentDesk/1.0 (public jobs; no automated applications)'});
           try {
             const r=await collect(c,{seeds:['https://www.offertoday.com/en/job/AyhVew6Kb5t_Sv19ONmqyA=='],limit:1,searchTerms:[]});
@@ -60,7 +60,7 @@ jobs:
             const p=await c.newPage();const network=[];const pending=[];
             p.on('response',response=>{const u=new URL(response.url());if(/job|recommend|detail|seo/i.test(u.pathname)&&['fetch','xhr'].includes(response.request().resourceType()))pending.push(response.json().then(d=>network.push({host:u.hostname,path:u.pathname,keys:Object.keys(d??{}),nested:Object.fromEntries(Object.entries(d??{}).filter(([,v])=>v&&typeof v==='object').map(([k,v])=>[k,Object.keys(v).slice(0,45)]))})).catch(()=>{}))});
             await p.goto('https://www.offertoday.com/en/job/AyhVew6Kb5t_Sv19ONmqyA==',{waitUntil:'domcontentloaded',timeout:30000});await p.waitForTimeout(8000);await Promise.all(pending);
-            const dom={text:(await p.locator('body').innerText()).slice(0,9000),buttons:await p.getByRole('button').allTextContents(),network};
+            const access=await jdAccess(p);const dom={network,buttons:await p.getByRole('button').allTextContents(),access,text:access.gated?'Restricted JD omitted.':(await p.locator('body').innerText()).slice(0,3000)};
             console.log('::notice title=Real detail DOM and response shape::'+JSON.stringify(dom).replaceAll('%','%25').replaceAll('\r','%0D').replaceAll('\n','%0A'));
           }finally{await c.close();await b.close()}
           JS

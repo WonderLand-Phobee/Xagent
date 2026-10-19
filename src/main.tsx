@@ -47,7 +47,7 @@ function App(){
  </div>
  <p className="feedback" role="status">{message}</p>
  <div className="table-notes"><span>✓ English JD only</span><span>✓ Official detail pages</span><span>✓ Same-day Job ID deduplication</span><span>✓ Missing facts stay unspecified</span></div>
- <details className="audit panel"><summary>Candidate audit <span>{day?.excludedCandidates.length??0} excluded</span></summary><p>Expired, inaccessible, mixed-language or unverified listings never enter the official table.</p>{day?.excludedCandidates.length?<div className="table-wrap"><table><thead><tr><th>Candidate</th><th>Job ID</th><th>Reason</th></tr></thead><tbody>{day.excludedCandidates.map((c,i)=><tr key={i}><td>{c.jobTitle}</td><td>{c.jobId??'Missing'}</td><td>{c.reason}</td></tr>)}</tbody></table></div>:<p>No excluded candidates recorded for this edition.</p>}</details>
+ <details className="audit panel"><summary>Candidate audit <span>{day?.excludedCandidates.length??0} excluded</span></summary><p>Expired, inaccessible, mixed-language or unverified listings never enter the official table.</p>{day?.excludedCandidates.length?<div className="table-wrap"><table><thead><tr><th>Candidate</th><th>Job ID</th><th>Reason</th></tr></thead><tbody>{day.excludedCandidates.map((c,i)=><tr key={i}><td>{c.jobTitle}</td><td>{c.jobId??'Missing'}</td><td>{c.reason}{c.detail&&<small className="checked-time">{c.detail}</small>}</td></tr>)}</tbody></table></div>:<p>No excluded candidates recorded for this edition.</p>}</details>
  <footer><span>OfferToday <b>Daily Jobs</b></span><span>*10:00 HKT scheduled refresh. GitHub execution may be delayed.</span><a href="https://github.com/WonderLand-Phobee/Xagent" target="_blank" rel="noreferrer">Project & setup ↗</a></footer>
  </main></>
 }

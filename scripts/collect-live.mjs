@@ -10,8 +10,23 @@ const origin='https://www.offertoday.com';
 export const keywords=['Software Engineer','Software Developer','UI UX Designer','Graphic Designer','Video Editor'];
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 function objects(value){if(!value||typeof value!=='object')return [];if(Array.isArray(value))return value.flatMap(objects);return [value,...Object.values(value).flatMap(objects)];}
+const loginNotice=/sign\s*in\s+(?:to\s+)?(?:view|see|unlock|access)[^\n]{0,70}(?:full|job description|more|details)|登入.{0,20}(?:完整|更多).{0,20}(?:職位|描述|內容)/i;
+export async function jdAccess(page){
+ const heading=page.getByText('Job Description',{exact:true}).first();
+ if(!await heading.count()){
+  const match=(await page.locator('body').innerText()).match(loginNotice);
+  return {gated:!!match,scope:'page',notice:match?.[0]??''};
+ }
+ const section=heading.locator('..');const text=await section.innerText();
+ const masked=await section.evaluate(root=>[root,...root.querySelectorAll('*')].some(el=>{
+  const style=getComputedStyle(el),height=parseFloat(style.maxHeight);
+  return Number.isFinite(height)&&height>0&&height<=500&&['hidden','clip'].includes(style.overflowY);
+ }));
+ const match=text.match(loginNotice);
+ return {gated:masked&&!!match,scope:'job-description',notice:match?.[0]??''};
+}
 export async function collect(context,{seeds=[],pinned=[],limit=60,searchTerms=keywords,delay=2500,inspect=false}={}){
- const page=await context.newPage();page.setDefaultTimeout(8000);const errors=[],audit=[],jobs=[];const urls=new Set();
+ const page=await context.newPage();page.setDefaultTimeout(8000);const errors=[],audit=[],jobs=[];
  const deadline=Date.now()+12*60*1000;
  const pinnedURLs=new Set(pinned);
  let robots;
@@ -41,31 +56,45 @@ export async function collect(context,{seeds=[],pinned=[],limit=60,searchTerms=k
   if(!robotResponse?.ok())throw new Error('robots.txt unavailable; collection stopped');
   robots=robotsParser(origin+'/robots.txt',await robotResponse.text());
   delay=Math.max(delay,(robots.getCrawlDelay(AGENT)||0)*1000);
-  // Operator must first review terms. This browser does
+  // Source access-policy observations are documented in docs/DATA_SOURCE.md. This browser does
   // not synthesize an API request; it observes the site's own normal responses.
   if(inspect){
    await navigate(origin+'/en/recommend');
-   return {jobs:[],audit,errors,inputs:await page.locator('input').evaluateAll(xs=>xs.map(x=>({placeholder:x.placeholder,type:x.type}))),inspection:(await page.locator('body').innerText()).slice(0,18000),links:await page.locator('a[href*="/job/"]').evaluateAll(as=>as.map(a=>a.href).slice(0,20))};
+   const access=await jdAccess(page);
+   return {jobs:[],audit,errors,inputs:await page.locator('input').evaluateAll(xs=>xs.map(x=>({placeholder:x.placeholder,type:x.type}))),inspection:access.gated?'Full JD is gated; description omitted.':(await page.locator('body').innerText()).slice(0,18000),links:await page.locator('a[href*="/job/"]').evaluateAll(as=>as.map(a=>a.href).slice(0,20))};
   }
-  for(const s of seeds){try{const u=new URL(s);if(u.origin===origin&&/^\/(?:en\/)?job\//.test(u.pathname))urls.add(u.href)}catch{}}
+  const canonical=value=>{try{const u=new URL(value);return u.origin===origin&&/^\/(?:en\/)?job\/[^/]+\/?$/.test(u.pathname)?u.href:null}catch{return null}};
+  const seedURLs=[...new Set([...pinned,...seeds].map(canonical).filter(Boolean))];
+  const pinnedList=seedURLs.filter(u=>pinnedURLs.has(u));
   await navigate(origin+'/en/recommend');
-  const addLinks=async()=>{
-   for(const href of await page.locator('a[href*="/job/"]').evaluateAll(as=>as.map(a=>a.href))){const u=new URL(href);if(u.origin===origin&&/^\/en\/job\/[^/]+\/?$/.test(u.pathname))urls.add(u.href)}
-  };
-  await addLinks();
-  const initialURLs=new Set(urls);
+  const readLinks=async()=>[...new Set((await page.locator('a[href*="/job/"]').evaluateAll(as=>as.map(a=>a.href))).map(canonical).filter(Boolean))];
+  const rootLinks=await readLinks();const groups=[];
+  const perTerm=Math.max(1,Math.ceil(limit/Math.max(1,searchTerms.length)));
   for(const term of searchTerms){
-   if(urls.size>=limit)break;
    const input=page.locator('input:visible');
    const fields=await input.all();let search;
    for(const field of fields){const ph=(await field.getAttribute('placeholder'))??'';if(/search|job|職位|搜尋|搜索/i.test(ph)){search=field;break}}
    if(!search){errors.push('Could not identify the public search box; collected visible official links only.');break}
    try{await search.fill(term);await search.press('Enter');await pause(delay)}catch{errors.push('Public search became unavailable; using already discovered official links.');break}
    if(await challenge())throw new Error('Access challenge encountered; stopped without solving it');
-   for(let scroll=0;scroll<3;scroll++){await addLinks();if(await page.locator('a[href*="/job/"]:visible').count())await page.locator('a[href*="/job/"]:visible').first().hover({timeout:2500}).catch(()=>{});await page.mouse.wheel(0,850);await pause(delay);if(urls.size>=limit)break}
+   const group=new Set();
+   for(let scroll=0;scroll<3;scroll++){
+    for(const u of await readLinks())if(!rootLinks.includes(u)&&group.size<perTerm)group.add(u);
+    if(group.size>=perTerm)break;
+    if(await page.locator('a[href*="/job/"]:visible').count())await page.locator('a[href*="/job/"]:visible').first().hover({timeout:2500}).catch(()=>{});
+    await page.mouse.wheel(0,850);await pause(delay);
+   }
+   groups.push([...group]);audit.push({search:term,discovered:group.size});
   }
-  if(!urls.size)errors.push('No official job links in rendered page. Login/challenge/markup may require a permitted source update.');
-  for(const url of [...urls].sort((a,b)=>Number(pinnedURLs.has(b))-Number(pinnedURLs.has(a))||Number(initialURLs.has(a))-Number(initialURLs.has(b))).slice(0,limit)){
+  // Every query gets a discovery budget; growing history never prevents fresh searches.
+  const fresh=[];for(let i=0;i<perTerm;i++)for(const group of groups)if(group[i]&&!fresh.includes(group[i]))fresh.push(group[i]);
+  const fallback=seedURLs.filter(u=>!pinnedURLs.has(u));
+  const reserve=Math.min(20,fallback.length,Math.max(0,limit-pinnedList.length-1));
+  const freshBudget=Math.max(1,limit-pinnedList.length-reserve);
+  const candidates=[...new Set([...pinnedList,...fresh.slice(0,freshBudget),...fallback.slice(0,reserve),...fresh.slice(freshBudget),...fallback,...rootLinks])].slice(0,limit);
+  if(!candidates.length)errors.push('No official job links in rendered page. Login/challenge/markup may require a permitted source update.');
+  let gatedStreak=0;
+  for(const url of candidates){
    const records=[];
    const expectedId=decodeURIComponent(new URL(url).pathname.split('/').filter(Boolean).at(-1));
    let signalReady;const ready=new Promise(resolve=>{signalReady=resolve});
@@ -84,13 +113,19 @@ export async function collect(context,{seeds=[],pinned=[],limit=60,searchTerms=k
    try{
     await navigate(url);let timer;await Promise.race([ready,new Promise(r=>{timer=setTimeout(r,12000)})]);clearTimeout(timer);
     const unique=[...new Map(records.map(r=>[String(r.jobId),r])).values()];
-    const body=await page.locator('body').innerText();
-    if(/sign\s*in\s+(?:to\s+)?(?:view|see|unlock|access)[^\n]{0,70}(?:full|job description|more|details)|登入.{0,20}(?:完整|更多).{0,20}(?:職位|描述|內容)/i.test(body)){
-     jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});errors.push('Full JD requires sign-in; collection stopped; restricted content was not exported.');break;
-    }
-    const closed=/this (?:job|position) (?:has expired|is closed|is no longer available)|job expired|applications? closed|職位已(?:關閉|過期|下架)|职位已(?:关闭|过期|下架)/i.test(body);
     const action=page.locator('#jobDetailActionButton').getByText(/^(?:Apply(?: now)?|Chat(?: now)?|Start chat|Send application message|立即申請|立即溝通|立即申请|立即沟通)$/i,{exact:true}).first();
     await action.waitFor({state:'visible',timeout:3000}).catch(()=>{});
+    const access=await jdAccess(page);
+    if(access.gated){
+     jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:await page.locator('#jobDetail-header').innerText().catch(()=>'Unknown'),blockReason:'Full JD requires sign-in'});
+     audit.push({url,access:'login required for full JD',scope:access.scope,notice:access.notice});
+     gatedStreak++;
+     if(gatedStreak>=3){errors.push('Several consecutive full JDs require sign-in; stopped without exporting restricted descriptions.');break}
+     continue;
+    }
+    gatedStreak=0;
+    const body=await page.locator('body').innerText();
+    const closed=/this (?:job|position) (?:has expired|is closed|is no longer available)|job expired|applications? closed|職位已(?:關閉|過期|下架)|职位已(?:关闭|过期|下架)/i.test(body);
     const hasEnabledAction=await action.isVisible().catch(()=>false)&&await action.evaluate(el=>!el.closest('[disabled],[aria-disabled="true"]')&&getComputedStyle(el).pointerEvents!=='none').catch(()=>false);
     if(unique.length!==1){jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});continue}
     const r=unique[0];

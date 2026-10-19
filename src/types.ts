@@ -8,5 +8,5 @@ export interface Post {
 export interface Daily {
  date:string; timezone:string; targetCount:number; lastRunAt:string|null; lastSuccessfulRunAt?:string|null;
  status:string; shortfall:number; posts:Post[]; demo:boolean;
- excludedCandidates:{jobId:string|null;jobUrl:string;jobTitle:string;reason:string}[]; errors:string[];
+ excludedCandidates:{jobId:string|null;jobUrl:string;jobTitle:string;reason:string;detail?:string|null}[]; errors:string[];
 }

@@ -112,7 +112,7 @@ def build_day(jobs, date, now, history, previous=None, errors=None):
         if not reason and jid in seen:
             reason = 'Duplicate same day'
         if reason:
-            excluded.append({'jobId': jid, 'jobUrl': j.get('jobUrl', ''), 'jobTitle': j.get('jobTitle', 'Unknown'), 'reason': reason})
+            excluded.append({'jobId': jid, 'jobUrl': j.get('jobUrl', ''), 'jobTitle': j.get('jobTitle', 'Unknown'), 'reason': reason, 'detail': j.get('blockReason')})
             continue
         seen.add(jid)
         j.update(jobId=jid, category=category(j['jobTitle'], j['description']), jdLanguage='English')
