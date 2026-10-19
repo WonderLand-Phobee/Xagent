@@ -1,0 +1,66 @@
+{
+  "runAt": "2026-10-19T20:52:45.686579+08:00",
+  "requests": [
+    {
+      "url": "https://www.offertoday.com/en/recommend",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/MDkNhAV1vFW-I0p5FGddlQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/MDkNhAV1vFW-I0p5FGddlQ==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/TNF-92hKrosSm7VUagLc_A==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/TNF-92hKrosSm7VUagLc_A==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/dC60vj06cXMGkASikwy8cQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/dC60vj06cXMGkASikwy8cQ==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/45n-nE5uuZYSxNHvyN-K_w==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/45n-nE5uuZYSxNHvyN-K_w==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/Abe810KLBlejylSufWtHAg==",
+      "status": 200
+    }
+  ],
+  "errors": [
+    "Full JD requires sign-in; collection stopped; restricted content was not exported."
+  ],
+  "eligible": 4,
+  "excluded": 1
+}
