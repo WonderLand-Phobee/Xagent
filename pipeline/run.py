@@ -48,12 +48,15 @@ def generate(root=ROOT, demo=False):
         seeds += [p['jobUrl'] for d in sorted(history, reverse=True) for p in history[d].get('posts', []) if not history[d].get('demo')]
         try:
             from .browser import collect_live
-            jobs, browser_errors, audit = collect_live(root, list(dict.fromkeys(seeds)), now)
+            jobs, browser_errors, audit = collect_live(root, list(dict.fromkeys(seeds)), now, pinned=[p['jobUrl'] for p in (previous or {}).get('posts', [])])
             errors.extend(browser_errors)
             if not jobs:
                 errors.append('No official job records could be verified in the normal browser. Check source audit and access restrictions.')
         except Exception as exc:
             errors.append(f'Browser collection failed: {type(exc).__name__}: {exc}')
+    now = datetime.now(HK)
+    date = now.date().isoformat()
+    previous = history.get(date)
     day = build_day(jobs, date, now, history, previous, errors)
     day['demo'] = demo
     if demo:

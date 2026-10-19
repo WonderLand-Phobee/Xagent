@@ -52,3 +52,15 @@ test('late responses for a different job cannot be attached to the requested URL
  const r=await collect(context,{searchTerms:[],delay:30});
  expect(r.jobs).toHaveLength(1);expect(r.jobs[0].sourceJobId).toBe('correct');expect(r.jobs[0].jobTitle).toBe('Correct requested job');
 });
+test('a same-day verified URL is checked before other seed URLs',async({context})=>{
+ await context.route('https://www.offertoday.com/**',r=>{
+  const u=new URL(r.request().url());
+  if(u.pathname==='/robots.txt')return r.fulfill({contentType:'text/plain',body:'User-agent: *\nAllow: /'});
+  if(u.pathname==='/en/recommend')return r.fulfill({contentType:'text/html',body:'<a href="/en/job/new">TEST ONLY</a>'});
+  if(u.pathname.includes('/wapi/')){const id=u.searchParams.get('id');return r.fulfill({json:{data:{jobId:id,jobStatus:2,jobSource:0,jobName:'TEST '+id,jobDesc:'Build software with our engineering team.'}}})}
+  const id=u.pathname.split('/').pop();return r.fulfill({contentType:'text/html',body:`<div id="jobDetailActionButton">Send application message</div><script>fetch('/wapi/geek/recommend/jobDetail?id=${id}')</script>`});
+ });
+ const pinned='https://www.offertoday.com/en/job/existing';
+ const r=await collect(context,{seeds:['https://www.offertoday.com/en/job/manual',pinned],pinned:[pinned],limit:1,searchTerms:[],delay:30});
+ expect(r.jobs).toHaveLength(1);expect(r.jobs[0].sourceJobId).toBe('existing');
+});

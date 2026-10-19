@@ -96,6 +96,8 @@ def validate(job, now):
         return 'Chinese JD' if regex.search(r'\p{Han}', job.get('description', '')) else 'Non-English or insufficient JD'
     if not category(job.get('jobTitle', ''), job.get('description', '')):
         return 'Out of scope'
+    if job.get('qualityIssue')=='Conflicting salary':
+        return 'Conflicting salary'
     return None
 
 def build_day(jobs, date, now, history, previous=None, errors=None):

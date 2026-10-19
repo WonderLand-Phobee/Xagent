@@ -10,9 +10,10 @@ const origin='https://www.offertoday.com';
 export const keywords=['Software Engineer','Software Developer','UI UX Designer','Graphic Designer','Video Editor'];
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 function objects(value){if(!value||typeof value!=='object')return [];if(Array.isArray(value))return value.flatMap(objects);return [value,...Object.values(value).flatMap(objects)];}
-export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,delay=2500,inspect=false}={}){
+export async function collect(context,{seeds=[],pinned=[],limit=60,searchTerms=keywords,delay=2500,inspect=false}={}){
  const page=await context.newPage();page.setDefaultTimeout(8000);const errors=[],audit=[],jobs=[];const urls=new Set();
  const deadline=Date.now()+12*60*1000;
+ const pinnedURLs=new Set(pinned);
  let robots;
  await page.route('**/*',route=>{
   const u=new URL(route.request().url());
@@ -64,7 +65,7 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
    for(let scroll=0;scroll<3;scroll++){await addLinks();if(await page.locator('a[href*="/job/"]:visible').count())await page.locator('a[href*="/job/"]:visible').first().hover({timeout:2500}).catch(()=>{});await page.mouse.wheel(0,850);await pause(delay);if(urls.size>=limit)break}
   }
   if(!urls.size)errors.push('No official job links in rendered page. Login/challenge/markup may require a permitted source update.');
-  for(const url of [...urls].sort((a,b)=>Number(initialURLs.has(a))-Number(initialURLs.has(b))).slice(0,limit)){
+  for(const url of [...urls].sort((a,b)=>Number(pinnedURLs.has(b))-Number(pinnedURLs.has(a))||Number(initialURLs.has(a))-Number(initialURLs.has(b))).slice(0,limit)){
    const records=[];
    const expectedId=decodeURIComponent(new URL(url).pathname.split('/').filter(Boolean).at(-1));
    let signalReady;const ready=new Promise(resolve=>{signalReady=resolve});
@@ -113,7 +114,7 @@ async function main(){
  const context=await browser.newContext({locale:'en-HK',userAgent:'OfferTodayContentDesk/1.0 (public jobs; no automated applications)'});
  try{
   const input=process.argv[2]&&process.argv[2]!=='--inspect'?JSON.parse(readFileSync(process.argv[2],'utf8')):{};
-  const output=await collect(context,{seeds:input.seeds??[],limit:Math.min(80,Math.max(12,Number(process.env.OFFERTODAY_CANDIDATE_LIMIT)||60)),inspect:process.argv.includes('--inspect')});
+  const output=await collect(context,{seeds:input.seeds??[],pinned:input.pinned??[],limit:Math.min(80,Math.max(12,Number(process.env.OFFERTODAY_CANDIDATE_LIMIT)||60)),inspect:process.argv.includes('--inspect')});
   process.stdout.write(JSON.stringify(output));
  }finally{await context.close();await browser.close()}
 }

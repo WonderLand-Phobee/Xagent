@@ -8,6 +8,7 @@ import tempfile
 from pathlib import Path
 from bs4 import BeautifulSoup
 from .core import clean, UNKNOWN
+from .quality import conflicting_salary
 
 
 def parse_browser_job(raw, now):
@@ -34,6 +35,11 @@ def parse_browser_job(raw, now):
     elif re.search(r'\bFreelance\b',raw.get('jobTypeRaw') or '',re.I):
         arrangement=clean(raw['jobTypeRaw'])
     experience=clean(raw.get('experience')) or UNKNOWN
+    if experience.casefold()=='no experience limit':
+        experience=UNKNOWN # This platform default is not evidence of a JD requirement.
+    explicit_no_experience=re.search(r'\bno\s+(?:(?:prior|previous|relevant)\s+)?experience\s+(?:is\s+)?(?:required|necessary)\b',description,re.I)
+    if explicit_no_experience:
+        experience=explicit_no_experience[0]
     lines=soup.get_text('\n',strip=True)
     section=re.search(r'(?im)^\s*(?:(?:job|key|essential|minimum)\s+)?(?:requirements|qualifications|what you bring)\s*:?\s*$',lines)
     if section:
@@ -41,15 +47,15 @@ def parse_browser_job(raw, now):
         if requirement:
             experience=requirement[1].strip()
     return dict(jobUrl=raw.get('jobUrl',''), sourceJobId=raw.get('sourceJobId'),jobTitle=raw.get('jobTitle','Unknown'),
-                description=description, jobStatus=raw.get('jobStatus','Unverified'), activeEvidence=raw.get('activeEvidence'),
+                description=description, qualityIssue='Conflicting salary' if conflicting_salary(pay,description) else None, jobStatus=raw.get('jobStatus','Unverified'), activeEvidence=raw.get('activeEvidence'),
                 verifiedAt=raw.get('verifiedAt') or now.isoformat(), salary=salary,
                 experience=experience,workArrangement=arrangement,highlights=highlights)
 
 
-def collect_live(root, seeds, now):
+def collect_live(root, seeds, now, pinned=None):
     with tempfile.TemporaryDirectory(prefix='offertoday-browser-') as folder:
         path=Path(folder)/'input.json'
-        path.write_text(json.dumps({'seeds':seeds}))
+        path.write_text(json.dumps({'seeds':seeds,'pinned':pinned or []}))
         result=subprocess.run(['node',str(root/'scripts/collect-live.mjs'),str(path)],cwd=root,capture_output=True,text=True,timeout=840,env={**os.environ,'OFFERTODAY_PYTHON':sys.executable})
         if result.returncode:
             # Chromium's normal TLS/launch errors are safe; do not emit cookie/header dumps.
