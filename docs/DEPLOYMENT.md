@@ -21,18 +21,15 @@
 
 首次看到 blocked 和空表，表示尚未获得可信职位来源，不会展示假岗位。
 
-## 3. 完成真实官网访问（当前关键前提）
+## 3. 每日从 www 官网公开页面更新
 
-www 的 robots 和 JavaScript 主页现可访问，但没有直接的职位内容；官方 m/hk 子站仍被代理拒绝，真实详情和条款尚未验收。
+不需要你提供 API、X Key、模型 Key 或数据库。爬虫用正常浏览器打开 `www.offertoday.com` 的公开职位页，使用搜索框，读取该页面自己加载的职位信息。
 
-1. 环境配置草稿已加入 `www.offertoday.com`、`offertoday.com`、`hk.offertoday.com` 、`m.offertoday.com` 和 `api.github.com`。在环境设置里检查并保存，再按平台提示发布环境，使访问配置生效。**这是开发环境配置，和 GitHub Pages 发布不同。**
-2. 返回聊天告诉助手已生效，让助手继续检查官方 robots、条款和真实英文职位详情。
-3. 需要实际确认稳定 Job ID、英文正文和明确的开放状态证据。若页面不提供可靠状态，优先使用 OfferToday 官方 API/导出；提供接口文档和安全授权方式，不要在聊天里发密钥。
-4. 当前严格 JSON-LD 适配器是未验收的接口框架。实际结构不同时需要修改适配器和回归测试，不能简单把未知状态标成 Active。
-5. 允许访问、页面适配和真实结果验收都完成后，GitHub 仓库 → **Settings → Secrets and variables → Actions → Variables → New repository variable**：Name 为 `OFFERTODAY_SOURCE_APPROVED`，Value 为 `true`。
-6. **Actions → Daily verified edition → Run workflow**。检查结果和固定网页：真实数量不足 12 就显示缺口，不应凑假数据。
+GitHub 标准浏览器已成功读到真实列表和详情链接。每日工作流会自动尝试；你可在 **Actions → Daily verified edition → Run workflow** 手动重跑。需要暂停时，在仓库 **Settings → Secrets and variables → Actions → Variables** 新建 `OFFERTODAY_SOURCE_APPROVED=false`。
 
-可把你实际获得的官方详情 URL 加入 `data/candidates.json`（JSON 字符串数组），辅助发现。手动加入 URL 也必须重新在线验证。不要复制需求文档里的示例 URL。
+每条职位独立检查公开招聘状态、英文原始 JD、稳定 ID 和真实详情链接；未知、过期、中文/混合 JD 都排除。当天没有可靠结果就显示缺口，不用演示数据补足。
+
+官网公布的 robots 已检查并由代码每次重新读取。官网条款链接的正文目前未成功加载，仍需继续核实；出现访问禁止或挑战时会停止，不绕过验证码、登录或证书错误。详细证据与限制见 DATA_SOURCE.md。
 
 ## 4. 可选提醒（你目前选择暂不配置，可跳过）
 
@@ -73,7 +70,7 @@ www 的 robots 和 JavaScript 主页现可访问，但没有直接的职位内�
 | 问题 | 操作 |
 | --- | --- |
 | 官网 403 / Unverified | 检查访问许可、网络和实际结构，不能关闭验证凑数 |
-| Source approval required | 先完成来源许可和真实适配，再设置开关 |
+| Source approval required | 本地默认关闭；GitHub 变量设为 false 也会暂停，先确认你的暂停设置 |
 | Pages 部署失败 | Settings → Pages → Source 选择 GitHub Actions |
 | Actions git push 失败 | Settings → Actions → General 允许读写仓库；检查分支保护 |
 | 页面没有更新 | 查看 Daily workflow，手动重跑；长期不活跃时恢复定时任务 |

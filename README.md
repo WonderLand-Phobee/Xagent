@@ -4,7 +4,7 @@
 
 **没有登录、审核、CSV、Airtable、Supabase 或自动发布。** 不需要 X Key 或 LLM Key。按当前要求暂不配置提醒；代码保留可选的邮件/Telegram 支持，默认不会发送。
 
-> **真实来源尚未验收**：www 官方 robots 和主页现已可读，但主页是 JavaScript 空壳，没有可直接提取的职位；正常公开搜索请求返回 400，官方条款所在 m 子站及 hk 子站仍被代理拒绝。当前正式快照明确是 **blocked / 0 个合格职位**。采集器是保守的集成框架，尚未完成真实数据适配。固定页面可以先交付，真实每日职位更新需要继续完成官方允许的数据接入。
+> **接入状态**：GitHub 标准浏览器已经成功读取 www 官网的真实列表、详情链接和搜索框。每日流程现使用普通浏览器页面采集，不要求你提供接口。完整筛选运行的结果以 `data/daily/`、Actions 和网页状态为准；没有合格记录就如实显示缺口。官网条款正文仍未成功加载，不能声称已完成条款审核。
 
 ## 零基础上线
 
@@ -57,7 +57,7 @@ npm run test:e2e
 
 云环境若 npm 默认缓存不可写，使用 `npm ci --cache /tmp/offertoday-npm`。已安装 Chromium 时可用 `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e`，无需重复下载。
 
-必须先检查官方服务条款/robots、取得需要的访问授权并验收真实页面适配，之后才启用 `OFFERTODAY_SOURCE_APPROVED=true`。不要为了消除报错打开开关。参见 [来源验证边界](docs/DATA_SOURCE.md) 和 [验收记录](docs/VALIDATION.md)。
+GitHub 每日任务按你对 www 公开页面采集的明确要求启用尝试；设置仓库变量 `OFFERTODAY_SOURCE_APPROVED=false` 可暂停。此开关不是通过验证的标志，每个职位仍需独立确认。开发机本地默认不联网采集；只在正常 TLS/访问条件满足时显式设置 `OFFERTODAY_SOURCE_APPROVED=true`。参见 [来源验证边界](docs/DATA_SOURCE.md) 和 [验收记录](docs/VALIDATION.md)。
 
 ## 结构
 

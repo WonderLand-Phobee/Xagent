@@ -45,6 +45,7 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
    for(const href of await page.locator('a[href*="/job/"]').evaluateAll(as=>as.map(a=>a.href))){const u=new URL(href);if(u.origin===origin&&/^\/en\/job\/[^/]+\/?$/.test(u.pathname))urls.add(u.href)}
   };
   await addLinks();
+  const initialURLs=new Set(urls);
   for(const term of searchTerms){
    if(urls.size>=limit)break;
    const input=page.locator('input:visible');
@@ -56,7 +57,7 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
    for(let scroll=0;scroll<3;scroll++){await addLinks();await page.locator('a[href*="/job/"]').first().hover().catch(()=>{});await page.mouse.wheel(0,850);await pause(delay);if(urls.size>=limit)break}
   }
   if(!urls.size)errors.push('No official job links in rendered page. Login/challenge/markup may require a permitted source update.');
-  for(const url of [...urls].slice(0,limit)){
+  for(const url of [...urls].sort((a,b)=>Number(initialURLs.has(a))-Number(initialURLs.has(b))).slice(0,limit)){
    const records=[];
    const pending=[];
    const listener=response=>{
@@ -77,9 +78,10 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
     const hasEnabledAction=await action.isVisible().catch(()=>false)&&await action.isEnabled().catch(()=>false);
     if(unique.length!==1){jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});continue}
     const r=unique[0];
-    jobs.push({jobUrl:url,sourceJobId:String(r.jobId),jobTitle:r.jobName,description:r.jobDesc,
-      jobStatus:closed?'Expired':r.jobStatus===2&&hasEnabledAction?'Active':'Unverified',
-      activeEvidence:r.jobStatus===2&&hasEnabledAction&&!closed?'Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.':null,
+    audit.push({url,jobStatus:r.jobStatus,jobSource:r.jobSource,hasEnabledAction,closed,buttons:!hasEnabledAction?(await page.getByRole('button').allTextContents()).slice(0,12):[]});
+    jobs.push({jobUrl:url,verifiedAt:new Date().toISOString(),sourceJobId:String(r.jobId),jobTitle:r.jobName,description:r.jobDesc,
+      jobStatus:closed?'Expired':r.jobStatus===2&&r.jobSource!==1&&hasEnabledAction?'Active':'Unverified',
+      activeEvidence:r.jobStatus===2&&r.jobSource!==1&&hasEnabledAction&&!closed?'Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.':null,
       salaryRaw:r.salaryDesc??'',experience:r.workExperienceDesc??'',jobTypeRaw:r.jobTypeDesc??''});
    }catch(e){jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});errors.push(e.message);if(/challenge|budget/.test(e.message))break}
    finally{page.off('response',listener)}
@@ -92,7 +94,7 @@ async function main(){
  const context=await browser.newContext({locale:'en-HK',userAgent:'OfferTodayContentDesk/1.0 (public jobs; no automated applications)'});
  try{
   const input=process.argv[2]&&process.argv[2]!=='--inspect'?JSON.parse(readFileSync(process.argv[2],'utf8')):{};
-  const output=await collect(context,{seeds:input.seeds??[],inspect:process.argv.includes('--inspect')});
+  const output=await collect(context,{seeds:input.seeds??[],limit:Math.min(80,Math.max(12,Number(process.env.OFFERTODAY_CANDIDATE_LIMIT)||60)),inspect:process.argv.includes('--inspect')});
   process.stdout.write(JSON.stringify(output));
  }finally{await context.close();await browser.close()}
 }

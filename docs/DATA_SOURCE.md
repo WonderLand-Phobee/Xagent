@@ -1,41 +1,43 @@
-# Source contract and go-live gate
+# Official public-page source
 
-## What has actually been observed
+## Source and access method
 
-Initial requests received CONNECT 403 from the environment proxy. A later retry retrieved the www robots file and JavaScript homepage: the robots file has no declared sitemap; the HTML has no job links/JobPosting data. A normal request to a public-facing search path declared by the site's own app received HTTP 400. Official m/hk hosts (including the published terms link) remain inaccessible. No live detail record has been verified and terms have not been reviewed. See VALIDATION.md for the recorded access and browser trust limitations. No invented short URL or fabricated recruitment record is used.
+The user explicitly selected `www.offertoday.com` as the daily source and cannot provide another interface. The active collector uses ordinary Playwright Chromium navigation on that official website, without a user account, private API integration, hand-built request signatures, injected session cookies, stealth plugins, CAPTCHA solving, or disabled TLS validation. The program never clicks Apply or sends an application/contact message.
 
-The included JSON-LD parser is a conservative **unvalidated integration contract**, not a claim that the current website emits those fields. Source approval is off by default. To finish live ingestion, gain permitted official access, inspect actual pages and update this adapter with evidence and regression fixtures. If OfferToday does not publish sufficient state, obtain an official API/export with an authoritative open/closed field; do not substitute existence of a page for open status.
+It fetches current robots first, uses a wildcard-aware parser and the site's crawl delay, and refuses disallowed routes, scan pages, applied-job recommendation URLs, non-official/cross-origin detail URLs, challenges and failed page loads. Default spacing is at least 2.5 seconds, with a maximum 60 candidate URLs (hard cap 80) and a 12-minute browser collection budget. History is reverified in a fresh browser context each day.
 
-## Discovery
+The normal rendered public Jobs page provides actual links; standard form filling/Enter performs searches for Software Engineer, Software Developer, UI UX Designer, Graphic Designer and Video Editor. These are public browser searches, not replayed private API calls. Candidate and historical URLs can supplement discovery but cannot bypass verification.
 
-After operator approval, fetch official robots first. A robots fetch error fails closed. Read only sitemap locations actually declared in robots. Follow at most 8 sitemap documents and consider at most 80 URLs per run. Review these limits and the actual sitemap ordering during go-live: they are a conservative access budget, not a guarantee that all fresh positions are covered. Candidate URLs and historical recommendation URLs are also reverified. Search-engine snippets and old Airtable drafts never count as status evidence.
+## Evidence observed on the actual site
 
-Only HTTPS official hostnames `offertoday.com`, `www.offertoday.com`, `hk.offertoday.com` and the job-detail path pattern are accepted. The path pattern itself needs confirming against actual official URLs. The stable ID is taken from the detail path, with query parameters ignored; alternate language URLs collapse to the same ID. Userinfo, nonstandard ports and outside hosts are refused. Cross-host redirects are refused for manual review.
+GitHub Actions normal-browser checks have successfully rendered the official Jobs page, real detail links, the search placeholder `Search Job or Keyword`, and the displayed default job's original JD. See [source inspection](https://github.com/WonderLand-Phobee/Xagent/actions/workflows/source-check.yml).
 
-## Current parser contract
+Official URLs use padded opaque IDs, for example IDs ending `==`; encoded/unencoded padding is normalized. The official detail frontend marks `jobStatus !== 2` or source `Bot` as unavailable for its normal live-job flow. These semantics were observed in the site's published `JobDetail-kd21IKHd.js` and `referralOperationType-DDd8Z9xR.js` on 2026-10-19. This is version-specific evidence, not a promise that future structures remain identical.
 
-- Exactly one schema.org `JobPosting`; malformed or ambiguous pages → Unverified.
-- Canonical and JSON-LD URL, when present, must have the same stable ID.
-- Explicit JobPosting `additionalProperty.jobStatus` of `Active/Open`, **plus** a timezone-qualified future `validThrough`. A future expiry date alone is insufficient. Missing or ambiguous timezone → Unverified.
-- Explicit Closed/Expired/Inactive or past validThrough → Expired. Recognized closed notices also exclude. Actual production notices must be tested before go-live.
-- Only `description` is language-tested, excluding navigation/footer text. Require sufficient English text; reject Han/Kana/Hangul content in JD. This intentionally errs on the side of exclusion and may reject English descriptions containing a small Chinese company/product name. Other-language or very short descriptions are quarantined rather than guessed English.
-- Job title classification is conservative and scope-based; no inference from the presence of a technology word in unrelated sales JD.
-- Salary only from structured currency + amount + unit. Experience only from explicit string `experienceRequirements`. Work arrangement only from explicit `workArrangement` property. TELECOMMUTE alone never becomes Work from Anywhere. Unavailable fields stay Not specified.
-- Two JD list items/sentences become factual highlights. Template shortens only their quoted text, never replaces required fields with inferred values. If the template cannot fit 280 weighted characters or lacks two facts, leave the optional draft empty and keep the otherwise eligible job; display that a draft needs shortening.
-- Every run fetches again. Reused jobs carry last recommended date and count; same-day reruns do not duplicate or inflate that count. Existing eligible same-day slots are preserved; invalidated slots are cleared.
+The collector only observes the **normal browser page's own** official detail response, never calls that endpoint directly. It requires exactly one distinct job record; status 2, non-Bot source, an enabled visible Apply/Chat/Send application message action, and no explicit closed/expired notice. Ambiguous records remain Unverified. The API payload's stable Job ID deduplicates multiple paths/language variants; a validated direct detail URL is always retained.
 
-## Safe manual seeding
+Use the original `jobDesc`, never `translateJobDesc`, for English validation. Reject substantive Chinese/mixed JD, insufficient text and other detected languages. An English JD mentioning Cantonese/Mandarin is allowed.
 
-Edit `data/candidates.json` to contain only actual official detail URLs. This helps discovery, not verification. User-supplied status/English flags or copied historical content cannot bypass fetching. An inaccessible link is quarantined. No fake share-link generation is present.
+## Terms and operating limits
 
-## Production acceptance
+The www robots retrieved on 2026-10-19 disallows scan routes and applied-job recommendation routes, but declares no sitemap. The official app links service terms to `m.offertoday.com/wap/policy/2?lang=en`. HTTP and ordinary-browser attempts retrieved an empty application shell/body, so the terms' substantive text has **not** been reviewed. This is recorded as an outstanding access-policy check, not proof of permission or prohibition. Do not represent the service as legally certified. If later terms, robots, or website responses restrict collection, pause the workflow and obtain appropriate permission rather than bypassing controls.
 
-1. Read official access rules and obtain permission where needed. Respect robots and retain TLS checks.
-2. Save redacted real-page fixtures for an active English JD, an expired JD, a mixed-language JD, canonical/language variants, and missing data.
-3. Assert the adapter extracts correct fields against the rendered official page/authoritative export. Verify identity and explicit status semantics.
-4. Run with permission and inspect at least several candidates manually. Check no unrelated mechanical/sales roles and no guessed arrangement/pay units.
-5. Run twice on the same day, check stable IDs/slots/recommendation counts, then check cross-day reuse with fresh requests.
-6. Confirm a failed run publishes failure health and removes unverified same-day candidates from the current queue.
-7. Verify GitHub scheduled execution, the fixed page, real clipboard copy, and the chosen reminder channel from another device. Only then label live ingestion operational.
+This development machine initially returned proxy 403. Its Chromium official-site navigation also failed CA verification; automatic approval rejected adding a proxy root to the persistent browser trust store. No trust-store change or TLS bypass was performed. A standard GitHub Actions runner successfully rendered the public site with its normal TLS checks, providing a safer execution path.
 
-Never turn an unknown field into Active to increase the daily count. Meeting the 12-slot target is subordinate to truthful eligibility.
+## Fact extraction
+
+- Exact original title from the official page data.
+- Salary requires an explicit amount/unit string; do not add a monthly unit or currency by assumption.
+- Experience only from the official explicit `workExperienceDesc`.
+- Work arrangement only from an explicit labeled JD statement or verified Freelance type; no remote geography inference. Missing values stay Not specified.
+- Two original JD list items/paragraphs/sentences become factual highlights. No LLM API is used.
+- X template uses weighted counts and a real direct URL. If required fields cannot fit 280 safely, keep the eligible job and flag its draft as requiring shortening. Prefer copy-ready eligible jobs when filling new slots.
+- Same-day Job ID deduplication; cross-day reuse allowed only after current-run verification; recommendation counts track unique dates, not reruns.
+
+## Switches
+
+Daily GitHub execution is authorized by the user's explicit public-page collection request. The workflow attempts collection unless repository variable `OFFERTODAY_SOURCE_APPROVED=false` pauses it. This is an **attempt permission**, not a validation-success flag. Every job still passes the strict independent rules.
+
+Local runs remain off unless `OFFERTODAY_SOURCE_APPROVED=true` is explicitly supplied. Local Chromium may need supported TLS trust configuration; never turn verification off. Install dependencies and Chromium using the documented verified installers.
+
+The earlier JSON-LD parser remains covered by tests as a conservative auxiliary parser; the current JavaScript site's live workflow uses the browser collector, not a nonexistent sitemap/HTML feed.

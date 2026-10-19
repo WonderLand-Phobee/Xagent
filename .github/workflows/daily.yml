@@ -3,6 +3,9 @@ on:
   schedule:
     - cron: '0 2 * * *' # 10:00 Asia/Hong_Kong. GitHub scheduling can be delayed.
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['pipeline/**', 'scripts/collect-live.mjs', '.github/workflows/daily.yml']
 permissions:
   contents: write
   pages: write
@@ -25,12 +28,20 @@ jobs:
         with:
           python-version: '3.12'
           cache: pip
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
       - run: pip install -r requirements.txt
       - name: Generate and reverify today's edition
         id: generate
         continue-on-error: true
         env:
-          OFFERTODAY_SOURCE_APPROVED: ${{ vars.OFFERTODAY_SOURCE_APPROVED }}
+          # User explicitly requested bounded collection from www public pages.
+          # Set this repository variable to false to pause; robots/challenges still stop collection.
+          OFFERTODAY_SOURCE_APPROVED: ${{ vars.OFFERTODAY_SOURCE_APPROVED != 'false' }}
         run: python -m pipeline.run
       - name: Save snapshots including source failure health
         run: |

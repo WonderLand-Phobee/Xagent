@@ -7,7 +7,7 @@ test('normal browser observes only the detail page response; no API replay',asyn
   const u=new URL(route.request().url());
   if(u.pathname==='/robots.txt')return route.fulfill({contentType:'text/plain',body:'User-agent: *\nAllow: /'});
   if(u.pathname==='/wapi/geek/recommend/jobDetail'){
-   detailRequests++;return route.fulfill({json:{data:{jobId:'fixture',jobStatus:2,jobName:'TEST Software Engineer',jobDesc:'Build accessible software for our customers with a modern engineering team.',salaryDesc:'Not specified',workExperienceDesc:'Not specified'}}});
+   detailRequests++;return route.fulfill({json:{data:{jobId:'fixture',jobStatus:2,jobSource:0,jobName:'TEST Software Engineer',jobDesc:'Build accessible software for our customers with a modern engineering team.',salaryDesc:'Not specified',workExperienceDesc:'Not specified'}}});
   }
   if(u.pathname==='/en/recommend')return route.fulfill({contentType:'text/html',body:'<a href="/en/job/fixture">TEST ONLY</a>'});
   if(u.pathname==='/en/job/fixture')return route.fulfill({contentType:'text/html',body:'<button>Apply now</button><script>fetch("/wapi/geek/recommend/jobDetail?id=fixture")</script>'});

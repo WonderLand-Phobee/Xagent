@@ -125,7 +125,7 @@ def build_day(jobs, date, now, history, previous=None, errors=None):
                  account='OfferToday-TechJobs' if j['category'] == 'Tech' else 'OfferToday-DesignJobs')
         posts.append(j)
     # Retain same-day slots for still-eligible jobs, then fill vacancies. Never retain stale verification.
-    posts.sort(key=lambda j: (j['jobId'] not in prior, prior.get(j['jobId'], {}).get('scheduledTime', '99:99')))
+    posts.sort(key=lambda j: (j['jobId'] not in prior, not bool(j['xCopy']), prior.get(j['jobId'], {}).get('scheduledTime', '99:99')))
     posts = posts[:12]
     occupied = set()
     for j in posts:

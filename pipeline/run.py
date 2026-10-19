@@ -5,7 +5,6 @@ import tempfile
 from datetime import datetime
 from pathlib import Path
 from .core import HK, build_day
-from .source import Client, parse_detail
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,7 +37,6 @@ def generate(root=ROOT, demo=False):
     elif os.getenv('OFFERTODAY_SOURCE_APPROVED', '').lower() != 'true':
         errors.append('Source approval required: review official terms and robots, then enable OFFERTODAY_SOURCE_APPROVED. No live jobs have been verified.')
     else:
-        client = Client()
         try:
             seeds = load(root/'data/candidates.json', [])
             if not isinstance(seeds, list) or any(not isinstance(u,str) for u in seeds):
@@ -48,20 +46,14 @@ def generate(root=ROOT, demo=False):
             errors.append(f'Candidate configuration invalid: {exc}')
         # Revalidate all same-day slots and prior recommendations before considering reuse.
         seeds += [p['jobUrl'] for d in sorted(history, reverse=True) for p in history[d].get('posts', []) if not history[d].get('demo')]
-        urls = list(dict.fromkeys(seeds))
         try:
-            urls = client.discover(urls)
+            from .browser import collect_live
+            jobs, browser_errors, audit = collect_live(root, list(dict.fromkeys(seeds)), now)
+            errors.extend(browser_errors)
+            if not jobs:
+                errors.append('No official job records could be verified in the normal browser. Check source audit and access restrictions.')
         except Exception as exc:
-            errors.append(f'Discovery failed: {type(exc).__name__}: {exc}')
-        if not urls:
-            errors.append('No official job URLs discovered. The current site is JavaScript-rendered and needs a permitted, verified source adapter or official API.')
-        for url in urls[:80]:
-            try:
-                jobs.append(parse_detail(url, client.get(url), now))
-            except Exception as exc:
-                jobs.append(dict(jobUrl=url, jobTitle='Unknown', jobStatus='Unverified'))
-                errors.append(f'Fetch failed: {url}: {type(exc).__name__}: {exc}')
-        audit = client.audit
+            errors.append(f'Browser collection failed: {type(exc).__name__}: {exc}')
     day = build_day(jobs, date, now, history, previous, errors)
     day['demo'] = demo
     if demo:
