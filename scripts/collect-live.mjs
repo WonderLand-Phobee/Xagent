@@ -66,21 +66,27 @@ export async function collect(context,{seeds=[],limit=60,searchTerms=keywords,de
   if(!urls.size)errors.push('No official job links in rendered page. Login/challenge/markup may require a permitted source update.');
   for(const url of [...urls].sort((a,b)=>Number(initialURLs.has(a))-Number(initialURLs.has(b))).slice(0,limit)){
    const records=[];
-   const pending=[];
+   const expectedId=decodeURIComponent(new URL(url).pathname.split('/').filter(Boolean).at(-1));
+   let signalReady;const ready=new Promise(resolve=>{signalReady=resolve});
    const listener=response=>{
     const u=new URL(response.url());
     if(u.origin===origin&&u.pathname==='/wapi/geek/recommend/jobDetail'&&robots.isAllowed(response.url(),AGENT)===true){
-     pending.push(response.json().then(payload=>{
-      records.push(...objects(payload).filter(v=>typeof v.jobDesc==='string'&&typeof v.jobName==='string'&&v.jobId!==undefined));
-     }).catch(()=>{}));
+     const requestId=u.searchParams.get('id')??u.searchParams.get('jobId');
+     if(requestId&&decodeURIComponent(requestId)!==expectedId)return;
+     void response.json().then(payload=>{
+      const own=objects(payload).filter(v=>typeof v.jobDesc==='string'&&typeof v.jobName==='string'&&v.jobId!=null&&decodeURIComponent(String(v.jobId))===expectedId);
+      records.push(...own);if(own.length)signalReady(true);
+     }).catch(()=>{});
     }
    };
    page.on('response',listener);
-   const expected=page.waitForResponse(r=>{const u=new URL(r.url());return u.origin===origin&&u.pathname==='/wapi/geek/recommend/jobDetail'},{timeout:12000}).catch(()=>null);
    try{
-    await navigate(url);await expected;await Promise.all(pending);
+    await navigate(url);let timer;await Promise.race([ready,new Promise(r=>{timer=setTimeout(r,12000)})]);clearTimeout(timer);
     const unique=[...new Map(records.map(r=>[String(r.jobId),r])).values()];
     const body=await page.locator('body').innerText();
+    if(/sign\s*in\s+(?:to\s+)?(?:view|see|unlock|access)[^\n]{0,70}(?:full|job description|more|details)|登入.{0,20}(?:完整|更多).{0,20}(?:職位|描述|內容)/i.test(body)){
+     jobs.push({jobUrl:url,jobStatus:'Unverified',jobTitle:'Unknown'});errors.push('Full JD requires sign-in; collection stopped; restricted content was not exported.');break;
+    }
     const closed=/this (?:job|position) (?:has expired|is closed|is no longer available)|job expired|applications? closed|職位已(?:關閉|過期|下架)|职位已(?:关闭|过期|下架)/i.test(body);
     const action=page.locator('#jobDetailActionButton').getByText(/^(?:Apply(?: now)?|Chat(?: now)?|Start chat|Send application message|立即申請|立即溝通|立即申请|立即沟通)$/i,{exact:true}).first();
     await action.waitFor({state:'visible',timeout:3000}).catch(()=>{});

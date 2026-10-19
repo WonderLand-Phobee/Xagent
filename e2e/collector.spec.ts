@@ -30,3 +30,25 @@ test('current robots disallow stops page collection before navigation',async({co
  const result=await collect(context,{searchTerms:[],delay:1});
  expect(result.jobs).toHaveLength(0);expect(navigated).toBe(false);expect(result.errors.join(' ')).toContain('Disallowed');
 });
+test('login-gated full JD is not exported as a verified public job',async({context})=>{
+ await context.route('https://www.offertoday.com/**',r=>{
+  const path=new URL(r.request().url()).pathname;
+  if(path==='/robots.txt')return r.fulfill({contentType:'text/plain',body:'User-agent: *\nAllow: /'});
+  if(path==='/en/recommend')return r.fulfill({contentType:'text/html',body:'<a href="/en/job/gated">TEST ONLY</a>'});
+  if(path.includes('/wapi/'))return r.fulfill({json:{data:{jobId:'gated',jobStatus:2,jobSource:0,jobName:'TEST',jobDesc:'A full hidden description must never be exported.'}}});
+  return r.fulfill({contentType:'text/html',body:'Sign in to view the full job description.<div id="jobDetailActionButton">Send application message</div><script>fetch("/wapi/geek/recommend/jobDetail?id=gated")</script>'});
+ });
+ const r=await collect(context,{searchTerms:[],delay:50});
+ expect(r.jobs[0].jobStatus).toBe('Unverified');expect(JSON.stringify(r.jobs)).not.toContain('hidden description');expect(r.errors.join(' ')).toContain('sign-in');
+});
+test('late responses for a different job cannot be attached to the requested URL',async({context})=>{
+ await context.route('https://www.offertoday.com/**',r=>{
+  const u=new URL(r.request().url());
+  if(u.pathname==='/robots.txt')return r.fulfill({contentType:'text/plain',body:'User-agent: *\nAllow: /'});
+  if(u.pathname==='/en/recommend')return r.fulfill({contentType:'text/html',body:'<a href="/en/job/correct">TEST ONLY</a>'});
+  if(u.pathname.includes('/wapi/')){const id=u.searchParams.get('id');return r.fulfill({json:{data:{jobId:id,jobStatus:2,jobSource:0,jobName:id==='correct'?'Correct requested job':'Wrong prefetched job',jobDesc:'Build and test software with our product team.'}}})}
+  return r.fulfill({contentType:'text/html',body:'<div id="jobDetailActionButton">Send application message</div><script>fetch("/wapi/geek/recommend/jobDetail?id=wrong");setTimeout(()=>fetch("/wapi/geek/recommend/jobDetail?id=correct"),250)</script>'});
+ });
+ const r=await collect(context,{searchTerms:[],delay:30});
+ expect(r.jobs).toHaveLength(1);expect(r.jobs[0].sourceJobId).toBe('correct');expect(r.jobs[0].jobTitle).toBe('Correct requested job');
+});
