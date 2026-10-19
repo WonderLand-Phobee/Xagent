@@ -12,3 +12,7 @@ public/data/
 
 *.tsbuildinfo
 source-inspection.json
+
+# Account session credentials: never commit or publish.
+.private/
+offertoday-login*.json

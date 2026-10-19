@@ -98,3 +98,17 @@ test('a masked JD is excluded while another publicly readable job remains eligib
  const r=await collect(context,{searchTerms:[],limit:2,delay:30});
  expect(r.jobs.map(j=>j.jobStatus)).toEqual(['Unverified','Active']);expect(JSON.stringify(r.jobs)).not.toContain('PRIVATE SENTINEL CONTENT');expect(r.errors).toEqual([]);
 });
+test('an explicitly supplied login state is used by the ordinary browser session',async({browser})=>{
+ const authorized=await browser.newContext({storageState:{cookies:[{name:'fixture_session',value:'authorized-test-only',domain:'www.offertoday.com',path:'/',expires:-1,httpOnly:true,secure:true,sameSite:'Lax'}],origins:[]}});
+ try{
+  let received=false;
+  await authorized.route('https://www.offertoday.com/**',async route=>{
+   const u=new URL(route.request().url());
+   if(u.pathname==='/robots.txt')return route.fulfill({contentType:'text/plain',body:'User-agent: *\nAllow: /'});
+   received=(await route.request().allHeaders()).cookie?.includes('fixture_session=authorized-test-only')??false;
+   return route.fulfill({contentType:'text/html',body:'<h1>Public recommendation page</h1>'});
+  });
+  const result=await collect(authorized,{searchTerms:[],delay:1});
+  expect(received).toBe(true);expect(JSON.stringify(result)).not.toContain('authorized-test-only');
+ }finally{await authorized.close()}
+});

@@ -1,6 +1,7 @@
-/** Normal browser navigation only. No stealth, cookie injection, captcha solving,
+/** Normal browser navigation only. No stealth, fabricated credentials, captcha solving,
  * request replay, direct private APIs or certificate overrides. */
 import {chromium} from '@playwright/test';
+import {loadAuthState} from './auth-state.mjs';
 import robotsParser from 'robots-parser';
 const AGENT='OfferTodayContentDesk';
 import {readFileSync} from 'node:fs';
@@ -145,8 +146,9 @@ export async function collect(context,{seeds=[],pinned=[],limit=60,searchTerms=k
  return {jobs,errors:[...new Set(errors)],audit};
 }
 async function main(){
+ const storageState=loadAuthState(process.env.OFFERTODAY_AUTH_STATE_PATH);
  const browser=await chromium.launch({executablePath:process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH});
- const context=await browser.newContext({locale:'en-HK',userAgent:'OfferTodayContentDesk/1.0 (public jobs; no automated applications)'});
+ const context=await browser.newContext({storageState,locale:'en-HK',userAgent:'OfferTodayContentDesk/1.0 (public jobs; no automated applications)'});
  try{
   const input=process.argv[2]&&process.argv[2]!=='--inspect'?JSON.parse(readFileSync(process.argv[2],'utf8')):{};
   const output=await collect(context,{seeds:input.seeds??[],pinned:input.pinned??[],limit:Math.min(80,Math.max(12,Number(process.env.OFFERTODAY_CANDIDATE_LIMIT)||60)),inspect:process.argv.includes('--inspect')});

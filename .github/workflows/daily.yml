@@ -3,9 +3,6 @@ on:
   schedule:
     - cron: '0 2 * * *' # 10:00 Asia/Hong_Kong. GitHub scheduling can be delayed.
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths: ['pipeline/**', 'scripts/collect-live.mjs', '.github/workflows/daily.yml']
 permissions:
   contents: write
   pages: write
@@ -36,6 +33,24 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
       - run: pip install -r requirements.txt
+      - name: Prepare optional authorized OfferToday login
+        env:
+          LOGIN_STATE: ${{ secrets.OFFERTODAY_STORAGE_STATE }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          value = os.environ.get('LOGIN_STATE', '')
+          if value:
+              path = Path(os.environ['RUNNER_TEMP']) / 'offertoday-login.json'
+              path.write_text(value, encoding='utf-8')
+              path.chmod(0o600)
+              with open(os.environ['GITHUB_ENV'], 'a') as env:
+                  env.write(f'OFFERTODAY_AUTH_STATE_PATH={path}\n')
+              print('Authorized login state prepared; contents are never logged.')
+          else:
+              print('No login secret configured; using public pages only.')
+          PY
       - name: Generate and reverify today's edition
         id: generate
         continue-on-error: true
@@ -44,6 +59,9 @@ jobs:
           # Set this repository variable to false to pause; robots/challenges still stop collection.
           OFFERTODAY_SOURCE_APPROVED: ${{ vars.OFFERTODAY_SOURCE_APPROVED != 'false' }}
         run: python -m pipeline.run
+      - name: Remove temporary login credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/offertoday-login.json"
       - name: Save snapshots including source failure health
         run: |
           git config user.name 'github-actions[bot]'

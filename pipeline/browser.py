@@ -1,4 +1,4 @@
-"""Bridge to normal public browser navigation; no credentials or API replay."""
+"""Bridge to normal browser navigation with optional authorized session; no API replay."""
 import json
 import re
 import subprocess

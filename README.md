@@ -78,3 +78,7 @@ pipeline/                  Python 采集、验证、模板、审计与提醒
 网页和数据均公开，不保存密码、Token 或个人隐私。提醒凭据只存 GitHub Secrets，绝不进入前端或日志。GitHub 推送需要仓库和 workflow 写入权限；部署设置不由本地构建自动开启。
 
 固定页面上线、真实来源验收、定时任务执行和提醒送达分别验证；任一项未通过，都不能声称整个服务已投入每日使用。
+
+### 使用自己的 OfferToday 账号（Windows）
+
+如需读取登录后可见的完整 JD 和薪资，请按 [Windows 登录教程](docs/WINDOWS_LOGIN.md) 操作。双击 `LOGIN-WINDOWS.cmd` 后亲自登录，将本地导出的登录状态存为 GitHub Actions Secret `OFFERTODAY_STORAGE_STATE`。此功能可选；未配置时继续使用公开页面。凭证不会写入公开页面、代码或抓取附件。登录能否在 GitHub 上继续使用，需要首次实际运行验证。
