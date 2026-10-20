@@ -1,8 +1,9 @@
 {
   "timezone": "Asia/Hong_Kong",
   "dates": [
+    "2026-10-20",
     "2026-10-19"
   ],
-  "lastAttemptAt": "2026-10-19T21:14:53.726739+08:00",
-  "latestDate": "2026-10-19"
+  "lastAttemptAt": "2026-10-20T10:21:34.427676+08:00",
+  "latestDate": "2026-10-20"
 }
