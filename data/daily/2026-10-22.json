@@ -1,0 +1,129 @@
+{
+  "date": "2026-10-22",
+  "timezone": "Asia/Hong_Kong",
+  "targetCount": 12,
+  "lastRunAt": "2026-10-22T10:28:33.466662+08:00",
+  "lastSuccessfulRunAt": null,
+  "status": "partial",
+  "shortfall": 9,
+  "posts": [
+    {
+      "jobUrl": "https://www.offertoday.com/en/job/lPAALQZ4dlleA2cAYYd-WA==",
+      "sourceJobId": "lPAALQZ4dlleA2cAYYd-WA==",
+      "jobTitle": "UI/ UX Designer ",
+      "description": "UI/UX Designer Role Summary We seek a creative UI/UX Designer to craft intuitive, intelligent, and engaging product interfaces. You will bridge user needs with technical implementation and drive design decisions from research to final delivery. Key Responsibilities Develop product strategies and create UI/UX designs, including interaction models and scalable UI frameworks. Conduct qualitative and quantitative user research (interviews, Google Analytics, etc.). Collaborate with product managers, engineers, and other stakeholders to align on design deliverables. Produce wireframes, prototypes, and high‑fidelity mockups. Qualifications 3+ years of professional UI/UX design experience. Proficiency with design tools such as Adobe Creative Suite and Sketch. Understanding of mobile design guidelines (iOS, Android). Strong portfolio demonstrating user‑centred design process.",
+      "blockReason": null,
+      "qualityIssue": null,
+      "jobStatus": "Active",
+      "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
+      "verifiedAt": "2026-10-22T02:28:02.443Z",
+      "salary": "HK $36K-50K/Month",
+      "experience": "3 to 5 yrs exp",
+      "workArrangement": "Hybrid",
+      "highlights": [
+        "Develop product strategies and create UI/UX designs, including interaction models and scalable UI frameworks.",
+        "Conduct qualitative and quantitative user research (interviews, Google Analytics, etc.)."
+      ],
+      "jobId": "lPAALQZ4dlleA2cAYYd-WA==",
+      "category": "Design",
+      "jdLanguage": "English",
+      "xCopy": "🎨✨ 💰💰\nHiring: UI/ UX Designer \nSalary: HK $36K-50K/Month\nExperience: 3 to 5 yrs exp\nWork Arrangement: Hybrid\n• Develop product strategies and create UI/UX…\n• Conduct qualitative and quantitative user…\n#HiringNow #JobOpening\n💞Learn more & apply: https://www.offertoday.com/en/job/lPAALQZ4dlleA2cAYYd-WA==",
+      "contentHash": "a15c47df9cd46a8b45e0dc299f9597c961dd64eb3748c46a512af69921e842ed",
+      "repeatRecommendation": true,
+      "lastRecommendedDate": "2026-10-21",
+      "recommendationCount": 3,
+      "account": "OfferToday-DesignJobs",
+      "scheduledTime": "11:00"
+    },
+    {
+      "jobUrl": "https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "sourceJobId": "2Jae0wF8UXKDG5DLTufVtQ==",
+      "jobTitle": "Software Developer ",
+      "description": "Recruitment Licence Number : 83284 Job Responsibilities Responsible for the design and delivery of system architecture solutions, as well as the integration of internal stakeholders' requirements. Work closely with business, finance, and other stakeholders to clarify needs, guide requirement discussions, and ensure feasibility. Deliver high-quality code and technical designs, with clear approaches to troubleshooting and problem resolution. Coordinate cross-team resources, independently drive project progress, and take ownership of deliverables. Conduct system performance optimization and resolve production issues. Job Requirements Bachelor’s degree or above in Computer Science or related field, with 5+ years of Java development experience. Strong Java fundamentals, with solid understanding of I/O, multithreading, collections, and JVM principles. Familiar with mainstream open-source frameworks (e.g., Tomcat, Spring Boot, Spring Cloud, SpringMVC, MyBatis, Elasticsearch) and relational databases such as MySQL. Knowledge of system design and architecture, with hands-on experience in caching (Redis), messaging (MQ), and distributed mechanisms. Proficient in design patterns, multithreaded and high-performance programming, and performance tuning, with proven experience in high-traffic, high-load system optimization. Experience in financial or enterprise systems preferred; understanding of reconciliation, settlement, or transaction processing workflows is a plus. Strong abstraction, logical thinking, and problem-solving skills, with ability to apply design patterns effectively. Excellent communication and teamwork skills, with strong planning and innovation abilities.",
+      "blockReason": null,
+      "qualityIssue": null,
+      "jobStatus": "Active",
+      "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
+      "verifiedAt": "2026-10-22T02:27:54.494Z",
+      "salary": "HK $55K-60K/Month",
+      "experience": "5 to 10 yrs exp",
+      "workArrangement": "Not specified",
+      "highlights": [
+        "Responsible for the design and delivery of system architecture solutions, as well as the integration of internal stakeholders' requirements.",
+        "Work closely with business, finance, and other stakeholders to clarify needs, guide requirement discussions, and ensure feasibility."
+      ],
+      "jobId": "2Jae0wF8UXKDG5DLTufVtQ==",
+      "category": "Tech",
+      "jdLanguage": "English",
+      "xCopy": "💻⚙️ 💰💰\nHiring: Software Developer \nSalary: HK $55K-60K/Month\nExperience: 5 to 10 yrs exp\nWork Arrangement: Not specified\n• Responsible for the design and…\n• Work closely with business…\n#HiringNow #JobOpening\n💞Learn more & apply: https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "contentHash": "72f6e7d78669ca633badc95b7ee76a38b1915597a74161aa617f2a17072a3e62",
+      "repeatRecommendation": true,
+      "lastRecommendedDate": "2026-10-21",
+      "recommendationCount": 3,
+      "account": "OfferToday-TechJobs",
+      "scheduledTime": "12:00"
+    },
+    {
+      "jobUrl": "https://www.offertoday.com/en/job/0k5dX-AncRw3XHOhrS0C4Q==",
+      "sourceJobId": "0k5dX-AncRw3XHOhrS0C4Q==",
+      "jobTitle": "software engineer",
+      "description": "About Archireef Archireef is a pioneering nature-tech company operating at the intersection of climate adaptation and biodiversity. We develop science-driven, scalable solutions for coastal and marine habitat restoration using sustainable materials, advanced manufacturing, and ecological expertise. Our work spans coral reefs, intertidal ecosystems, and artificial marine structures, with operations across Hong Kong, Singapore, the UAE and Saudi Arabia. Why Join Archireef? Contribute to impactful, scalable solutions in the blue economy Work at the cutting edge of science, technology, and environmental sustainability Collaborate with a global team operating across Asia and the Middle East Enjoy a dynamic, mission-driven workplace with growth opportunities Responsibilities: Develop and maintain software tools for ecological monitoring, spatial analysis and marine restoration planning. Build and train machine learning models (e.g., image recognition for coral health, habitat classification from drone imagery). Automate data processing pipelines for photogrammetry, eDNA sequencing, and sensor data (e.g., ProDSS). Integrate ecological, spatial and engineering datasets into custom dashboards or GIS interfaces. Collaborate with ecologists and engineers to translate field needs into software tools. Support data visualization, modeling, and scenario planning for project delivery and reporting Assist in the development of standard operating procedures (SOPs) for design, testing, and deployment workflows. Support field team in training installation methodology, safety standards and post deployment checks. Preferred Qualifications: MSc or PhD in Computer Science, Data Science, Environmental Informatics, or similar. Prior industry experience delivering production-grade software or data systems in applied environmental, infrastructure, engineering, or commercial project settings is highly preferred. Proficiency in Python, R, and tools like TensorFlow, PyTorch, OpenCV and QGIS. Experience with ecological or remote sensing datasets, drone imagery or underwater image analysis. Familiarity with marine science is a strong plus but not mandatory. General Requirements: Strong analytical and problem-solving skills Demonstrated ability to work in cross-disciplinary teams Excellent written & verbal communication (English required; Cantonese/Mandarin a plus) Passion for marine conservation, restoration, and innovation Prior experience in writing scientific or technical reports is required Work Arrangement: Location: Hong Kong, with occasional field trips to other project sites as needed. Employment Type: Full-time (Under the Hong Kong Research Talent Hub Scheme) Working Hours: Monday to Friday, 9:00 AM to 6:00 PM, with flexibility required for fieldwork and travel. Hybrid work environment combining lab, field and office settings. Occasional weekend or evening work depending on project requirements. Application Process: Interested candidates should submit CV with cover letter  to *************** Shortlisted applicants will be contacted for interviews. Archireef is an equal-opportunity employer committed to diversity, innovation and ecological excellence.",
+      "blockReason": null,
+      "qualityIssue": null,
+      "jobStatus": "Active",
+      "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
+      "verifiedAt": "2026-10-22T02:27:47.403Z",
+      "salary": "HK $25K-45K/Month",
+      "experience": "3 to 5 yrs exp",
+      "workArrangement": "Location: Hong Kong, with occasional field trips to other project sites as needed",
+      "highlights": [
+        "Contribute to impactful, scalable solutions in the blue economy",
+        "Work at the cutting edge of science, technology, and environmental sustainability"
+      ],
+      "jobId": "0k5dX-AncRw3XHOhrS0C4Q==",
+      "category": "Tech",
+      "jdLanguage": "English",
+      "xCopy": "",
+      "contentHash": "d37206fce69f9a2b68d36da86214b36c7d79677ec1ab1aa659791dc31ff4efc5",
+      "repeatRecommendation": false,
+      "lastRecommendedDate": null,
+      "recommendationCount": 1,
+      "account": "OfferToday-TechJobs",
+      "scheduledTime": "13:00"
+    }
+  ],
+  "excludedCandidates": [
+    {
+      "jobId": "nT-BVY3s2LsHMwmu_lmJIQ==",
+      "jobUrl": "https://www.offertoday.com/en/job/nT-BVY3s2LsHMwmu_lmJIQ==",
+      "jobTitle": "Graphic Designer",
+      "reason": "Chinese JD",
+      "detail": null
+    },
+    {
+      "jobId": "kKJMXdq44WgGOWgonx1aJg==",
+      "jobUrl": "https://www.offertoday.com/en/job/kKJMXdq44WgGOWgonx1aJg==",
+      "jobTitle": "Video Editor",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    },
+    {
+      "jobId": "MDkNhAV1vFW-I0p5FGddlQ==",
+      "jobUrl": "https://www.offertoday.com/en/job/MDkNhAV1vFW-I0p5FGddlQ==",
+      "jobTitle": "software engineer",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    },
+    {
+      "jobId": "GwHSKLD5p5FKpRiamgU_YA==",
+      "jobUrl": "https://www.offertoday.com/en/job/GwHSKLD5p5FKpRiamgU_YA==",
+      "jobTitle": "Software Developer",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    }
+  ],
+  "errors": [
+    "Several consecutive full JDs require sign-in; stopped without exporting restricted descriptions."
+  ],
+  "demo": false
+}
