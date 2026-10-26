@@ -1,0 +1,112 @@
+{
+  "runAt": "2026-10-26T10:28:08.607406+08:00",
+  "requests": [
+    {
+      "url": "https://www.offertoday.com/en/recommend",
+      "status": 200
+    },
+    {
+      "search": "Software Engineer",
+      "discovered": 10
+    },
+    {
+      "search": "Software Developer",
+      "discovered": 10
+    },
+    {
+      "search": "UI UX Designer",
+      "discovered": 10
+    },
+    {
+      "search": "Graphic Designer",
+      "discovered": 10
+    },
+    {
+      "search": "Video Editor",
+      "discovered": 10
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/gTKY_tmBNiUArtLSUp4bIg==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/gTKY_tmBNiUArtLSUp4bIg==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/lPAALQZ4dlleA2cAYYd-WA==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/lPAALQZ4dlleA2cAYYd-WA==",
+      "jobStatus": 2,
+      "jobSource": 0,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/nT-BVY3s2LsHMwmu_lmJIQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/nT-BVY3s2LsHMwmu_lmJIQ==",
+      "jobStatus": 2,
+      "jobSource": 2,
+      "hasEnabledAction": true,
+      "closed": false,
+      "buttons": []
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/kKJMXdq44WgGOWgonx1aJg==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/kKJMXdq44WgGOWgonx1aJg==",
+      "access": "login required for full JD",
+      "scope": "job-description",
+      "notice": "Sign In to view full job description"
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/dC60vj06cXMGkASikwy8cQ==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/dC60vj06cXMGkASikwy8cQ==",
+      "access": "login required for full JD",
+      "scope": "job-description",
+      "notice": "Sign In to view full job description"
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/GwHSKLD5p5FKpRiamgU_YA==",
+      "status": 200
+    },
+    {
+      "url": "https://www.offertoday.com/en/job/GwHSKLD5p5FKpRiamgU_YA==",
+      "access": "login required for full JD",
+      "scope": "job-description",
+      "notice": "Sign In to view full job description"
+    }
+  ],
+  "errors": [
+    "Several consecutive full JDs require sign-in; stopped without exporting restricted descriptions."
+  ],
+  "eligible": 2,
+  "excluded": 5
+}
