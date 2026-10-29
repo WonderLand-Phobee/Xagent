@@ -1,0 +1,129 @@
+{
+  "date": "2026-10-29",
+  "timezone": "Asia/Hong_Kong",
+  "targetCount": 12,
+  "lastRunAt": "2026-10-29T10:40:05.667030+08:00",
+  "lastSuccessfulRunAt": null,
+  "status": "partial",
+  "shortfall": 9,
+  "posts": [
+    {
+      "jobUrl": "https://www.offertoday.com/en/job/lPAALQZ4dlleA2cAYYd-WA==",
+      "sourceJobId": "lPAALQZ4dlleA2cAYYd-WA==",
+      "jobTitle": "UI/ UX Designer ",
+      "description": "UI/UX Designer Role Summary We seek a creative UI/UX Designer to craft intuitive, intelligent, and engaging product interfaces. You will bridge user needs with technical implementation and drive design decisions from research to final delivery. Key Responsibilities Develop product strategies and create UI/UX designs, including interaction models and scalable UI frameworks. Conduct qualitative and quantitative user research (interviews, Google Analytics, etc.). Collaborate with product managers, engineers, and other stakeholders to align on design deliverables. Produce wireframes, prototypes, and high‑fidelity mockups. Qualifications 3+ years of professional UI/UX design experience. Proficiency with design tools such as Adobe Creative Suite and Sketch. Understanding of mobile design guidelines (iOS, Android). Strong portfolio demonstrating user‑centred design process.",
+      "blockReason": null,
+      "qualityIssue": null,
+      "jobStatus": "Active",
+      "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
+      "verifiedAt": "2026-10-29T02:39:34.081Z",
+      "salary": "HK $36K-50K/Month",
+      "experience": "3 to 5 yrs exp",
+      "workArrangement": "Hybrid",
+      "highlights": [
+        "Develop product strategies and create UI/UX designs, including interaction models and scalable UI frameworks.",
+        "Conduct qualitative and quantitative user research (interviews, Google Analytics, etc.)."
+      ],
+      "jobId": "lPAALQZ4dlleA2cAYYd-WA==",
+      "category": "Design",
+      "jdLanguage": "English",
+      "xCopy": "🎨✨ 💰💰\nHiring: UI/ UX Designer \nSalary: HK $36K-50K/Month\nExperience: 3 to 5 yrs exp\nWork Arrangement: Hybrid\n• Develop product strategies and create UI/UX…\n• Conduct qualitative and quantitative user…\n#HiringNow #JobOpening\n💞Learn more & apply: https://www.offertoday.com/en/job/lPAALQZ4dlleA2cAYYd-WA==",
+      "contentHash": "a15c47df9cd46a8b45e0dc299f9597c961dd64eb3748c46a512af69921e842ed",
+      "repeatRecommendation": true,
+      "lastRecommendedDate": "2026-10-28",
+      "recommendationCount": 10,
+      "account": "OfferToday-DesignJobs",
+      "scheduledTime": "11:00"
+    },
+    {
+      "jobUrl": "https://www.offertoday.com/en/job/TNF-92hKrosSm7VUagLc_A==",
+      "sourceJobId": "TNF-92hKrosSm7VUagLc_A==",
+      "jobTitle": "Software Engineer",
+      "description": "Job Responsibilities: Participate in system and software requirements, hardware design document, and code reviews. Responsible for software module design and organizing relevant personnel for review. Responsible for developing software functions according to design specificationsto meet product requirements. Responsible for fixing software-related bugs and the continuous improvement of products. Cooperate with engineers (electronic, mechanical, testing) within the team. Qualifications: Full-time bachelor's degree or above in Computer Science, Automation, or related fields. Over 3 years of embedded development experience; experience in sensor device development is preferred. Proficient in C/C++ programming languages, able to write driver code and business code from scratch. Proficient in using at least one type of MCU, with in-depth understanding and practical experience using peripherals (ADC/DAC/GPIO/UART/SPI/I2C). Possess troubleshooting skills for device debugging, MQTT protocol, BT/WiFi communication, etc.; familiar with related technologies such as remote OTA upgrades and host computer development. Good learning ability and logical thinking skills, positive work attitude, spirit of diligent study, and strong sense of teamwork. Good cross-department communication skills and team spirit, able to work closely with electronic and software engineers.",
+      "blockReason": null,
+      "qualityIssue": null,
+      "jobStatus": "Active",
+      "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
+      "verifiedAt": "2026-10-29T02:39:19.304Z",
+      "salary": "HK $30K-50K/Month",
+      "experience": "Not specified",
+      "workArrangement": "Not specified",
+      "highlights": [
+        "Participate in system and software requirements, hardware design document, and code",
+        "Responsible for software module design and organizing relevant personnel for review."
+      ],
+      "jobId": "TNF-92hKrosSm7VUagLc_A==",
+      "category": "Tech",
+      "jdLanguage": "English",
+      "xCopy": "💻⚙️ 💰💰\nHiring: Software Engineer\nSalary: HK $30K-50K/Month\nExperience: Not specified\nWork Arrangement: Not specified\n• Participate in system and software…\n• Responsible for software module…\n#HiringNow #JobOpening\n💞Learn more & apply: https://www.offertoday.com/en/job/TNF-92hKrosSm7VUagLc_A==",
+      "contentHash": "a54f2c0eee1e7bf3c0dc8e4d0dc154e5d5667c8ee9c1f7cdd521baf9f3d281bf",
+      "repeatRecommendation": true,
+      "lastRecommendedDate": "2026-10-24",
+      "recommendationCount": 3,
+      "account": "OfferToday-TechJobs",
+      "scheduledTime": "12:00"
+    },
+    {
+      "jobUrl": "https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "sourceJobId": "2Jae0wF8UXKDG5DLTufVtQ==",
+      "jobTitle": "Software Developer ",
+      "description": "Recruitment Licence Number : 83284 Job Responsibilities Responsible for the design and delivery of system architecture solutions, as well as the integration of internal stakeholders' requirements. Work closely with business, finance, and other stakeholders to clarify needs, guide requirement discussions, and ensure feasibility. Deliver high-quality code and technical designs, with clear approaches to troubleshooting and problem resolution. Coordinate cross-team resources, independently drive project progress, and take ownership of deliverables. Conduct system performance optimization and resolve production issues. Job Requirements Bachelor’s degree or above in Computer Science or related field, with 5+ years of Java development experience. Strong Java fundamentals, with solid understanding of I/O, multithreading, collections, and JVM principles. Familiar with mainstream open-source frameworks (e.g., Tomcat, Spring Boot, Spring Cloud, SpringMVC, MyBatis, Elasticsearch) and relational databases such as MySQL. Knowledge of system design and architecture, with hands-on experience in caching (Redis), messaging (MQ), and distributed mechanisms. Proficient in design patterns, multithreaded and high-performance programming, and performance tuning, with proven experience in high-traffic, high-load system optimization. Experience in financial or enterprise systems preferred; understanding of reconciliation, settlement, or transaction processing workflows is a plus. Strong abstraction, logical thinking, and problem-solving skills, with ability to apply design patterns effectively. Excellent communication and teamwork skills, with strong planning and innovation abilities.",
+      "blockReason": null,
+      "qualityIssue": null,
+      "jobStatus": "Active",
+      "activeEvidence": "Official page observed jobStatus=2 and enabled Apply/Chat action; status semantics confirmed in published official frontend.",
+      "verifiedAt": "2026-10-29T02:39:26.784Z",
+      "salary": "HK $55K-60K/Month",
+      "experience": "5 to 10 yrs exp",
+      "workArrangement": "Not specified",
+      "highlights": [
+        "Responsible for the design and delivery of system architecture solutions, as well as the integration of internal stakeholders' requirements.",
+        "Work closely with business, finance, and other stakeholders to clarify needs, guide requirement discussions, and ensure feasibility."
+      ],
+      "jobId": "2Jae0wF8UXKDG5DLTufVtQ==",
+      "category": "Tech",
+      "jdLanguage": "English",
+      "xCopy": "💻⚙️ 💰💰\nHiring: Software Developer \nSalary: HK $55K-60K/Month\nExperience: 5 to 10 yrs exp\nWork Arrangement: Not specified\n• Responsible for the design and…\n• Work closely with business…\n#HiringNow #JobOpening\n💞Learn more & apply: https://www.offertoday.com/en/job/2Jae0wF8UXKDG5DLTufVtQ==",
+      "contentHash": "72f6e7d78669ca633badc95b7ee76a38b1915597a74161aa617f2a17072a3e62",
+      "repeatRecommendation": true,
+      "lastRecommendedDate": "2026-10-28",
+      "recommendationCount": 8,
+      "account": "OfferToday-TechJobs",
+      "scheduledTime": "13:00"
+    }
+  ],
+  "excludedCandidates": [
+    {
+      "jobId": "jf4Q6v4CbYYFDboAPnIV-g==",
+      "jobUrl": "https://www.offertoday.com/en/job/jf4Q6v4CbYYFDboAPnIV-g==",
+      "jobTitle": "Graphic Designer",
+      "reason": "Chinese JD",
+      "detail": null
+    },
+    {
+      "jobId": "kKJMXdq44WgGOWgonx1aJg==",
+      "jobUrl": "https://www.offertoday.com/en/job/kKJMXdq44WgGOWgonx1aJg==",
+      "jobTitle": "Video Editor",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    },
+    {
+      "jobId": "dC60vj06cXMGkASikwy8cQ==",
+      "jobUrl": "https://www.offertoday.com/en/job/dC60vj06cXMGkASikwy8cQ==",
+      "jobTitle": "software engineer",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    },
+    {
+      "jobId": "GwHSKLD5p5FKpRiamgU_YA==",
+      "jobUrl": "https://www.offertoday.com/en/job/GwHSKLD5p5FKpRiamgU_YA==",
+      "jobTitle": "Software Developer",
+      "reason": "Unverified",
+      "detail": "Full JD requires sign-in"
+    }
+  ],
+  "errors": [
+    "Several consecutive full JDs require sign-in; stopped without exporting restricted descriptions."
+  ],
+  "demo": false
+}
